@@ -41,6 +41,96 @@ module.exports = {
                         },
                     }, { transaction });
 
+                    await queryInterface.createTable('contribuyente', {
+                        id: {
+                            type: Sequelize.DataTypes.UUID,
+                            defaultValue: Sequelize.DataTypes.UUIDV4,
+                            primaryKey: true,
+                        },
+                        createdById: {
+                            type: Sequelize.DataTypes.UUID,
+                            references: {
+                                key: 'id',
+                                model: 'users',
+                            },
+                        },
+                        updatedById: {
+                            type: Sequelize.DataTypes.UUID,
+                            references: {
+                                key: 'id',
+                                model: 'users',
+                            },
+                        },
+                        createdAt: { type: Sequelize.DataTypes.DATE },
+                        updatedAt: { type: Sequelize.DataTypes.DATE },
+                        deletedAt: { type: Sequelize.DataTypes.DATE },
+                        importHash: {
+                            type: Sequelize.DataTypes.STRING(255),
+                            allowNull: true,
+                          unique: true, 
+                        },
+                    }, { transaction });
+
+                    await queryInterface.createTable('compra', {
+                        id: {
+                            type: Sequelize.DataTypes.UUID,
+                            defaultValue: Sequelize.DataTypes.UUIDV4,
+                            primaryKey: true,
+                        },
+                        createdById: {
+                            type: Sequelize.DataTypes.UUID,
+                            references: {
+                                key: 'id',
+                                model: 'users',
+                            },
+                        },
+                        updatedById: {
+                            type: Sequelize.DataTypes.UUID,
+                            references: {
+                                key: 'id',
+                                model: 'users',
+                            },
+                        },
+                        createdAt: { type: Sequelize.DataTypes.DATE },
+                        updatedAt: { type: Sequelize.DataTypes.DATE },
+                        deletedAt: { type: Sequelize.DataTypes.DATE },
+                        importHash: {
+                            type: Sequelize.DataTypes.STRING(255),
+                            allowNull: true,
+                          unique: true, 
+                        },
+                    }, { transaction });
+
+                    await queryInterface.createTable('venta', {
+                        id: {
+                            type: Sequelize.DataTypes.UUID,
+                            defaultValue: Sequelize.DataTypes.UUIDV4,
+                            primaryKey: true,
+                        },
+                        createdById: {
+                            type: Sequelize.DataTypes.UUID,
+                            references: {
+                                key: 'id',
+                                model: 'users',
+                            },
+                        },
+                        updatedById: {
+                            type: Sequelize.DataTypes.UUID,
+                            references: {
+                                key: 'id',
+                                model: 'users',
+                            },
+                        },
+                        createdAt: { type: Sequelize.DataTypes.DATE },
+                        updatedAt: { type: Sequelize.DataTypes.DATE },
+                        deletedAt: { type: Sequelize.DataTypes.DATE },
+                        importHash: {
+                            type: Sequelize.DataTypes.STRING(255),
+                            allowNull: true,
+                          unique: true, 
+                        },
+                    }, { transaction });
+
                     await queryInterface.addColumn(
                       'users',
                       'firstName',
@@ -179,6 +269,96 @@ module.exports = {
                       { transaction }
                     );
 
+                    await queryInterface.addColumn(
+                      'contribuyente',
+                      'razonSocial',
+                      {
+                          type: Sequelize.DataTypes.TEXT,
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'contribuyente',
+                      'ruc',
+                      {
+                          type: Sequelize.DataTypes.TEXT,
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'compra',
+                      'contribuyenteId',
+                      {
+                          type: Sequelize.DataTypes.UUID,
+
+                            references: {
+                                model: 'contribuyente',
+                                key: 'id',
+                            },
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'compra',
+                      'numeroComprobante',
+                      {
+                          type: Sequelize.DataTypes.TEXT,
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'compra',
+                      'fechaComprobante',
+                      {
+                          type: Sequelize.DataTypes.DATEONLY,
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'venta',
+                      'contribuyenteId',
+                      {
+                          type: Sequelize.DataTypes.UUID,
+
+                            references: {
+                                model: 'contribuyente',
+                                key: 'id',
+                            },
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'venta',
+                      'numeroComprobante',
+                      {
+                          type: Sequelize.DataTypes.TEXT,
+
+                      },
+                      { transaction }
+                    );
+
+                    await queryInterface.addColumn(
+                      'venta',
+                      'fechaComprobante',
+                      {
+                          type: Sequelize.DataTypes.DATEONLY,
+
+                      },
+                      { transaction }
+                    );
+
             await transaction.commit();
         } catch (err) {
             await transaction.rollback();
@@ -196,6 +376,54 @@ module.exports = {
          */
         const transaction = await queryInterface.sequelize.transaction();
         try {
+
+                    await queryInterface.removeColumn(
+                        'venta',
+                        'fechaComprobante',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'venta',
+                        'numeroComprobante',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'venta',
+                        'contribuyenteId',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'compra',
+                        'fechaComprobante',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'compra',
+                        'numeroComprobante',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'compra',
+                        'contribuyenteId',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'contribuyente',
+                        'ruc',
+                        { transaction }
+                    );
+
+                    await queryInterface.removeColumn(
+                        'contribuyente',
+                        'razonSocial',
+                        { transaction }
+                    );
 
                     await queryInterface.removeColumn(
                         'users',
@@ -274,6 +502,12 @@ module.exports = {
                         'firstName',
                         { transaction }
                     );
+
+                    await queryInterface.dropTable('venta', { transaction });
+
+                    await queryInterface.dropTable('compra', { transaction });
+
+                    await queryInterface.dropTable('contribuyente', { transaction });
 
                     await queryInterface.dropTable('users', { transaction });
 
