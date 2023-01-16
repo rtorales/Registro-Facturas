@@ -39,7 +39,7 @@ const config = {
     port: 587,
     auth: {
       user: 'generator@flatlogic.com',
-      pass: process.env.EMAIL_PASS || 'flatlogic1863',
+      pass: process.env.EMAIL_PASS || 'glmvnkyygypgrdwt',
     },
     tls: {
       rejectUnauthorized: false,

@@ -6,6 +6,7 @@ const wrapAsync = require('../helpers').wrapAsync;
 
 const router = express.Router();
 
+const { parse } = require('json2csv');
 /**
  *  @swagger
  *  components:
@@ -214,9 +215,21 @@ router.delete(
 router.get(
   '/',
   wrapAsync(async (req, res) => {
+    const filetype = req.query.filetype;
     const payload = await UsersDBApi.findAll(req.query);
-
-    res.status(200).send(payload);
+    if (filetype && filetype === 'csv') {
+      const fields = ['id', 'firstName', 'lastName', 'phoneNumber', 'email'];
+      const opts = { fields };
+      try {
+        const csv = parse(payload.rows, opts);
+        res.status(200).attachment(csv);
+        res.send(csv);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      res.status(200).send(payload);
+    }
   }),
 );
 

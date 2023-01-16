@@ -18,6 +18,8 @@ const usersRoutes = require('./routes/users');
 
 const contribuyentesRoutes = require('./routes/contribuyentes');
 
+const comprasRoutes = require('./routes/compras');
+
 const ventasRoutes = require('./routes/ventas');
 
 const options = {
@@ -87,6 +89,12 @@ app.use(
   '/api/contribuyentes',
   passport.authenticate('jwt', { session: false }),
   contribuyentesRoutes,
+);
+
+app.use(
+  '/api/compras',
+  passport.authenticate('jwt', { session: false }),
+  comprasRoutes,
 );
 
 app.use(

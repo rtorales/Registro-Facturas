@@ -34,6 +34,9 @@ import UsersTablePage from 'pages/CRUD/Users/table/UsersTablePage';
 import ContribuyentesFormPage from 'pages/CRUD/Contribuyentes/form/ContribuyentesFormPage';
 import ContribuyentesTablePage from 'pages/CRUD/Contribuyentes/table/ContribuyentesTablePage';
 
+import ComprasFormPage from 'pages/CRUD/Compras/form/ComprasFormPage';
+import ComprasTablePage from 'pages/CRUD/Compras/table/ComprasTablePage';
+
 import VentasFormPage from 'pages/CRUD/Ventas/form/VentasFormPage';
 import VentasTablePage from 'pages/CRUD/Ventas/table/VentasTablePage';
 
@@ -106,6 +109,18 @@ function Layout(props) {
             path={'/admin/contribuyentes/:id/edit'}
             exact
             component={ContribuyentesFormPage}
+          />
+
+          <Route path={'/admin/compras'} exact component={ComprasTablePage} />
+          <Route
+            path={'/admin/compras/new'}
+            exact
+            component={ComprasFormPage}
+          />
+          <Route
+            path={'/admin/compras/:id/edit'}
+            exact
+            component={ComprasFormPage}
           />
 
           <Route path={'/admin/ventas'} exact component={VentasTablePage} />

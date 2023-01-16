@@ -14,6 +14,7 @@ import { withStyles } from '@mui/styles';
 import { makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link as LinkMaterial } from '../../../../components/Wrappers';
+import axios from 'axios';
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -62,19 +63,17 @@ const VentasTable = () => {
   const [width, setWidth] = React.useState(window.innerWidth);
 
   const [filters, setFilters] = React.useState([
-    { label: 'Numero Identificacion', title: 'numeroIdentificacion' },
     { label: 'Razon Social', title: 'razonSocial' },
-    { label: 'Timbrado', title: 'timbrado' },
     { label: 'Numero Comprobante', title: 'numeroComprobante' },
-
+    { label: 'Timbrado', title: 'timbrado', number: 'true' },
     {
-      label: 'Mongo Gravado 10 (IVA incluido)',
-      title: 'mongoGravado10',
+      label: 'Mongo Gravado 5 (IVA incluido)',
+      title: 'montoGravado5',
       number: 'true',
     },
     {
-      label: 'Mongo Gravado 5 (IVA incluido)',
-      title: 'mongoGravado5',
+      label: 'Monto Gravado 10 (IVA incluido)',
+      title: 'montoGravado10',
       number: 'true',
     },
     { label: 'Exento', title: 'exento', number: 'true' },
@@ -158,30 +157,18 @@ const VentasTable = () => {
     );
   };
 
-  const downloadCSV = () => {
-    const items = [...rows];
-
-    const replacer = (key, value) => (value === null ? '' : value);
-    const header = Object.keys(items[0]);
-    const csv = [
-      header.join(','), // header row first
-      ...items.map((row) =>
-        header
-          .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-          .join(','),
-      ),
-    ].join('\r\n');
-
-    const file = new File([csv], 'ventas-report.csv', {
-      type: 'text/plain',
+  const getVentasCSV = async () => {
+    const response = await axios({
+      url: '/ventas?filetype=csv',
+      method: 'GET',
+      responseType: 'blob',
     });
-
-    if (linkCsvDownload.current) {
-      linkCsvDownload.current.href = URL.createObjectURL(file);
-      linkCsvDownload.current.download = file.name;
-
-      linkCsvDownload.current.click();
-    }
+    const type = response.headers['content-type'];
+    const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'ventasCSV.csv';
+    link.click();
   };
 
   const addFilter = () => {
@@ -258,20 +245,6 @@ const VentasTable = () => {
     },
 
     {
-      field: 'tipoIdentificacionComprador',
-
-      headerName: 'Tipo Identificación Comprador',
-    },
-
-    {
-      field: 'numeroIdentificacion',
-
-      flex: 0.6,
-
-      headerName: 'Numero Identificacion',
-    },
-
-    {
       field: 'razonSocial',
 
       flex: 0.6,
@@ -286,14 +259,6 @@ const VentasTable = () => {
     },
 
     {
-      field: 'timbrado',
-
-      flex: 0.6,
-
-      headerName: 'Timbrado',
-    },
-
-    {
       field: 'numeroComprobante',
 
       flex: 0.6,
@@ -302,19 +267,19 @@ const VentasTable = () => {
     },
 
     {
-      field: 'mongoGravado10',
-
-      flex: 0.6,
-
-      headerName: 'Mongo Gravado 10 (IVA incluido)',
-    },
-
-    {
-      field: 'mongoGravado5',
+      field: 'montoGravado5',
 
       flex: 0.6,
 
       headerName: 'Mongo Gravado 5 (IVA incluido)',
+    },
+
+    {
+      field: 'montoGravado10',
+
+      flex: 0.6,
+
+      headerName: 'Monto Gravado 10 (IVA incluido)',
     },
 
     {
@@ -326,27 +291,11 @@ const VentasTable = () => {
     },
 
     {
-      field: 'imputaIVA',
+      field: 'timbrado',
 
-      renderCell: (params) => dataFormat.booleanFormatter(params.row),
+      flex: 0.6,
 
-      headerName: 'Imputa IVA',
-    },
-
-    {
-      field: 'imputaIRE',
-
-      renderCell: (params) => dataFormat.booleanFormatter(params.row),
-
-      headerName: 'Imputa IRE',
-    },
-
-    {
-      field: 'imputaIRPRSP',
-
-      renderCell: (params) => dataFormat.booleanFormatter(params.row),
-
-      headerName: 'Imputa IRP-RSP',
+      headerName: 'Timbrado',
     },
 
     {
@@ -384,12 +333,11 @@ const VentasTable = () => {
           <Button
             type='button'
             variant='contained'
-            onClick={downloadCSV}
+            onClick={getVentasCSV}
             className={classes.element}
           >
             Export CSV
           </Button>
-          <a ref={linkCsvDownload} href='' style={{ display: 'none' }}></a>
         </Box>
 
         <Box sx={{ flexGrow: 1 }}>

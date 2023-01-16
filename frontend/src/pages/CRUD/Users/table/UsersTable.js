@@ -11,6 +11,7 @@ import { withStyles } from '@mui/styles';
 import { makeStyles } from '@mui/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link as LinkMaterial } from '../../../../components/Wrappers';
+import axios from 'axios';
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -142,30 +143,18 @@ const UsersTable = () => {
     );
   };
 
-  const downloadCSV = () => {
-    const items = [...rows];
-
-    const replacer = (key, value) => (value === null ? '' : value);
-    const header = Object.keys(items[0]);
-    const csv = [
-      header.join(','), // header row first
-      ...items.map((row) =>
-        header
-          .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-          .join(','),
-      ),
-    ].join('\r\n');
-
-    const file = new File([csv], 'users-report.csv', {
-      type: 'text/plain',
+  const getUsersCSV = async () => {
+    const response = await axios({
+      url: '/users?filetype=csv',
+      method: 'GET',
+      responseType: 'blob',
     });
-
-    if (linkCsvDownload.current) {
-      linkCsvDownload.current.href = URL.createObjectURL(file);
-      linkCsvDownload.current.download = file.name;
-
-      linkCsvDownload.current.click();
-    }
+    const type = response.headers['content-type'];
+    const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'usersCSV.csv';
+    link.click();
   };
 
   const addFilter = () => {
@@ -318,12 +307,11 @@ const UsersTable = () => {
           <Button
             type='button'
             variant='contained'
-            onClick={downloadCSV}
+            onClick={getUsersCSV}
             className={classes.element}
           >
             Export CSV
           </Button>
-          <a ref={linkCsvDownload} href='' style={{ display: 'none' }}></a>
         </Box>
 
         <Box sx={{ flexGrow: 1 }}>

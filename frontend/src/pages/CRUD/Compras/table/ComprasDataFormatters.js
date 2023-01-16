@@ -73,8 +73,8 @@ function listFormatter(cell, history, entity) {
     <div>
       {cell &&
         cell.length &&
-        cell.map((value) => getContent(value.id, value.razonSocial))}
-      {cell && getContent(cell.id, cell.razonSocial)}
+        cell.map((value) => getContent(value.id, value.numeroComprobante))}
+      {cell && getContent(cell.id, cell.numeroComprobante)}
     </div>
   );
 }

@@ -129,6 +129,15 @@ function Sidebar({ location, structure }) {
         />
 
         <SidebarLink
+          label='Compras'
+          link='/admin/compras'
+          location={location}
+          isSidebarOpened={isSidebarOpenedWrapper}
+          icon={<CoreIcon />}
+          toggleDrawer={toggleDrawer(true)}
+        />
+
+        <SidebarLink
           label='Ventas'
           link='/admin/ventas'
           location={location}

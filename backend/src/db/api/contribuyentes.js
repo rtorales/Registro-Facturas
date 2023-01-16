@@ -206,21 +206,21 @@ module.exports = class ContribuyentesDBApi {
       where = {
         [Op.or]: [
           { ['id']: Utils.uuid(query) },
-          Utils.ilike('contribuyentes', 'id', query),
+          Utils.ilike('contribuyentes', 'razonSocial', query),
         ],
       };
     }
 
     const records = await db.contribuyentes.findAll({
-      attributes: ['id', 'id'],
+      attributes: ['id', 'razonSocial'],
       where,
       limit: limit ? Number(limit) : undefined,
-      orderBy: [['id', 'ASC']],
+      orderBy: [['razonSocial', 'ASC']],
     });
 
     return records.map((record) => ({
       id: record.id,
-      label: record.id,
+      label: record.razonSocial,
     }));
   }
 };

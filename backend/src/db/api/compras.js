@@ -6,31 +6,30 @@ const Utils = require('../utils');
 const Sequelize = db.Sequelize;
 const Op = Sequelize.Op;
 
-module.exports = class VentasDBApi {
+module.exports = class ComprasDBApi {
   static async create(data, options) {
     const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
-    const ventas = await db.ventas.create(
+    const compras = await db.compras.create(
       {
         id: data.id || undefined,
 
+        tipoIdentificacionComprador: data.tipoIdentificacionComprador || null,
+        numeroIdentificacion: data.numeroIdentificacion || null,
         razonSocial: data.razonSocial || null,
         fechaEmision: data.fechaEmision || null,
-        numeroIdentificacion: data.numeroIdentificacion || null,
-        tipoIdentificacionComprador: data.tipoIdentificacionComprador || null,
         numeroComprobante: data.numeroComprobante || null,
-        montoGravado5: data.montoGravado5 || null,
-        montoGravado10: data.montoGravado10 || null,
-        exento: data.exento || null,
+        mongoGravado10: data.mongoGravado10 || null,
+        mongoGravado5: data.mongoGravado5 || null,
         timbrado: data.timbrado || null,
-        imputaIVA: data.imputaIVA || false,
-
+        exento: data.exento || null,
         imputaIRE: data.imputaIRE || false,
+
+        imputaIVA: data.imputaIVA || false,
 
         imputaIRPRSP: data.imputaIRPRSP || false,
 
-        anexo: data.anexo || null,
         importHash: data.importHash || null,
         createdById: currentUser.id,
         updatedById: currentUser.id,
@@ -38,78 +37,97 @@ module.exports = class VentasDBApi {
       { transaction },
     );
 
-    await ventas.setContribuyente(data.contribuyente || null, {
+    await compras.setContribuyente(data.contribuyente || null, {
       transaction,
     });
 
     await FileDBApi.replaceRelationFiles(
       {
-        belongsTo: db.ventas.getTableName(),
+        belongsTo: db.compras.getTableName(),
+        belongsToColumn: 'anexo',
+        belongsToId: compras.id,
+      },
+      data.anexo,
+      options,
+    );
+
+    await FileDBApi.replaceRelationFiles(
+      {
+        belongsTo: db.compras.getTableName(),
         belongsToColumn: 'documento',
-        belongsToId: ventas.id,
+        belongsToId: compras.id,
       },
       data.documento,
       options,
     );
 
-    return ventas;
+    return compras;
   }
 
   static async update(id, data, options) {
     const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
-    const ventas = await db.ventas.findByPk(id, {
+    const compras = await db.compras.findByPk(id, {
       transaction,
     });
 
-    await ventas.update(
+    await compras.update(
       {
+        tipoIdentificacionComprador: data.tipoIdentificacionComprador || null,
+        numeroIdentificacion: data.numeroIdentificacion || null,
         razonSocial: data.razonSocial || null,
         fechaEmision: data.fechaEmision || null,
-        numeroIdentificacion: data.numeroIdentificacion || null,
-        tipoIdentificacionComprador: data.tipoIdentificacionComprador || null,
         numeroComprobante: data.numeroComprobante || null,
-        montoGravado5: data.montoGravado5 || null,
-        montoGravado10: data.montoGravado10 || null,
-        exento: data.exento || null,
+        mongoGravado10: data.mongoGravado10 || null,
+        mongoGravado5: data.mongoGravado5 || null,
         timbrado: data.timbrado || null,
-        imputaIVA: data.imputaIVA || false,
-
+        exento: data.exento || null,
         imputaIRE: data.imputaIRE || false,
+
+        imputaIVA: data.imputaIVA || false,
 
         imputaIRPRSP: data.imputaIRPRSP || false,
 
-        anexo: data.anexo || null,
         updatedById: currentUser.id,
       },
       { transaction },
     );
 
-    await ventas.setContribuyente(data.contribuyente || null, {
+    await compras.setContribuyente(data.contribuyente || null, {
       transaction,
     });
 
     await FileDBApi.replaceRelationFiles(
       {
-        belongsTo: db.ventas.getTableName(),
+        belongsTo: db.compras.getTableName(),
+        belongsToColumn: 'anexo',
+        belongsToId: compras.id,
+      },
+      data.anexo,
+      options,
+    );
+
+    await FileDBApi.replaceRelationFiles(
+      {
+        belongsTo: db.compras.getTableName(),
         belongsToColumn: 'documento',
-        belongsToId: ventas.id,
+        belongsToId: compras.id,
       },
       data.documento,
       options,
     );
 
-    return ventas;
+    return compras;
   }
 
   static async remove(id, options) {
     const currentUser = (options && options.currentUser) || { id: null };
     const transaction = (options && options.transaction) || undefined;
 
-    const ventas = await db.ventas.findByPk(id, options);
+    const compras = await db.compras.findByPk(id, options);
 
-    await ventas.update(
+    await compras.update(
       {
         deletedBy: currentUser.id,
       },
@@ -118,29 +136,33 @@ module.exports = class VentasDBApi {
       },
     );
 
-    await ventas.destroy({
+    await compras.destroy({
       transaction,
     });
 
-    return ventas;
+    return compras;
   }
 
   static async findBy(where, options) {
     const transaction = (options && options.transaction) || undefined;
 
-    const ventas = await db.ventas.findOne({ where }, { transaction });
+    const compras = await db.compras.findOne({ where }, { transaction });
 
-    if (!ventas) {
-      return ventas;
+    if (!compras) {
+      return compras;
     }
 
-    const output = ventas.get({ plain: true });
+    const output = compras.get({ plain: true });
 
-    output.contribuyente = await ventas.getContribuyente({
+    output.contribuyente = await compras.getContribuyente({
       transaction,
     });
 
-    output.documento = await ventas.getDocumento({
+    output.anexo = await compras.getAnexo({
+      transaction,
+    });
+
+    output.documento = await compras.getDocumento({
       transaction,
     });
 
@@ -166,6 +188,11 @@ module.exports = class VentasDBApi {
 
       {
         model: db.file,
+        as: 'anexo',
+      },
+
+      {
+        model: db.file,
         as: 'documento',
       },
     ];
@@ -178,21 +205,21 @@ module.exports = class VentasDBApi {
         };
       }
 
-      if (filter.razonSocial) {
-        where = {
-          ...where,
-          [Op.and]: Utils.ilike('ventas', 'razonSocial', filter.razonSocial),
-        };
-      }
-
       if (filter.numeroIdentificacion) {
         where = {
           ...where,
           [Op.and]: Utils.ilike(
-            'ventas',
+            'compras',
             'numeroIdentificacion',
             filter.numeroIdentificacion,
           ),
+        };
+      }
+
+      if (filter.razonSocial) {
+        where = {
+          ...where,
+          [Op.and]: Utils.ilike('compras', 'razonSocial', filter.razonSocial),
         };
       }
 
@@ -200,17 +227,10 @@ module.exports = class VentasDBApi {
         where = {
           ...where,
           [Op.and]: Utils.ilike(
-            'ventas',
+            'compras',
             'numeroComprobante',
             filter.numeroComprobante,
           ),
-        };
-      }
-
-      if (filter.anexo) {
-        where = {
-          ...where,
-          [Op.and]: Utils.ilike('ventas', 'anexo', filter.anexo),
         };
       }
 
@@ -238,14 +258,14 @@ module.exports = class VentasDBApi {
         }
       }
 
-      if (filter.montoGravado5Range) {
-        const [start, end] = filter.montoGravado5Range;
+      if (filter.mongoGravado10Range) {
+        const [start, end] = filter.mongoGravado10Range;
 
         if (start !== undefined && start !== null && start !== '') {
           where = {
             ...where,
-            montoGravado5: {
-              ...where.montoGravado5,
+            mongoGravado10: {
+              ...where.mongoGravado10,
               [Op.gte]: start,
             },
           };
@@ -254,22 +274,22 @@ module.exports = class VentasDBApi {
         if (end !== undefined && end !== null && end !== '') {
           where = {
             ...where,
-            montoGravado5: {
-              ...where.montoGravado5,
+            mongoGravado10: {
+              ...where.mongoGravado10,
               [Op.lte]: end,
             },
           };
         }
       }
 
-      if (filter.montoGravado10Range) {
-        const [start, end] = filter.montoGravado10Range;
+      if (filter.mongoGravado5Range) {
+        const [start, end] = filter.mongoGravado5Range;
 
         if (start !== undefined && start !== null && start !== '') {
           where = {
             ...where,
-            montoGravado10: {
-              ...where.montoGravado10,
+            mongoGravado5: {
+              ...where.mongoGravado5,
               [Op.gte]: start,
             },
           };
@@ -278,32 +298,8 @@ module.exports = class VentasDBApi {
         if (end !== undefined && end !== null && end !== '') {
           where = {
             ...where,
-            montoGravado10: {
-              ...where.montoGravado10,
-              [Op.lte]: end,
-            },
-          };
-        }
-      }
-
-      if (filter.exentoRange) {
-        const [start, end] = filter.exentoRange;
-
-        if (start !== undefined && start !== null && start !== '') {
-          where = {
-            ...where,
-            exento: {
-              ...where.exento,
-              [Op.gte]: start,
-            },
-          };
-        }
-
-        if (end !== undefined && end !== null && end !== '') {
-          where = {
-            ...where,
-            exento: {
-              ...where.exento,
+            mongoGravado5: {
+              ...where.mongoGravado5,
               [Op.lte]: end,
             },
           };
@@ -334,6 +330,30 @@ module.exports = class VentasDBApi {
         }
       }
 
+      if (filter.exentoRange) {
+        const [start, end] = filter.exentoRange;
+
+        if (start !== undefined && start !== null && start !== '') {
+          where = {
+            ...where,
+            exento: {
+              ...where.exento,
+              [Op.gte]: start,
+            },
+          };
+        }
+
+        if (end !== undefined && end !== null && end !== '') {
+          where = {
+            ...where,
+            exento: {
+              ...where.exento,
+              [Op.lte]: end,
+            },
+          };
+        }
+      }
+
       if (
         filter.active === true ||
         filter.active === 'true' ||
@@ -353,17 +373,17 @@ module.exports = class VentasDBApi {
         };
       }
 
-      if (filter.imputaIVA) {
-        where = {
-          ...where,
-          imputaIVA: filter.imputaIVA,
-        };
-      }
-
       if (filter.imputaIRE) {
         where = {
           ...where,
           imputaIRE: filter.imputaIRE,
+        };
+      }
+
+      if (filter.imputaIVA) {
+        where = {
+          ...where,
+          imputaIVA: filter.imputaIVA,
         };
       }
 
@@ -413,7 +433,7 @@ module.exports = class VentasDBApi {
     let { rows, count } = options?.countOnly
       ? {
           rows: [],
-          count: await db.ventas.count({
+          count: await db.compras.count({
             where,
             include,
             distinct: true,
@@ -426,7 +446,7 @@ module.exports = class VentasDBApi {
             transaction,
           }),
         }
-      : await db.ventas.findAndCountAll({
+      : await db.compras.findAndCountAll({
           where,
           include,
           distinct: true,
@@ -454,21 +474,21 @@ module.exports = class VentasDBApi {
       where = {
         [Op.or]: [
           { ['id']: Utils.uuid(query) },
-          Utils.ilike('ventas', 'id', query),
+          Utils.ilike('compras', 'numeroComprobante', query),
         ],
       };
     }
 
-    const records = await db.ventas.findAll({
-      attributes: ['id', 'id'],
+    const records = await db.compras.findAll({
+      attributes: ['id', 'numeroComprobante'],
       where,
       limit: limit ? Number(limit) : undefined,
-      orderBy: [['id', 'ASC']],
+      orderBy: [['numeroComprobante', 'ASC']],
     });
 
     return records.map((record) => ({
       id: record.id,
-      label: record.id,
+      label: record.numeroComprobante,
     }));
   }
 };

@@ -19,7 +19,7 @@ import ImagesFormItem from 'components/FormItems/items/ImagesFormItem';
 import FilesFormItem from 'components/FormItems/items/FilesFormItem';
 // eslint-disable-next-line no-unused-vars
 
-import ventasFields from 'pages/CRUD/Ventas/helpers/ventasFields';
+import comprasFields from 'pages/CRUD/Compras/helpers/comprasFields';
 import IniValues from 'components/FormItems/iniValues';
 import PreparedValues from 'components/FormItems/preparedValues';
 import FormValidations from 'components/FormItems/formValidations';
@@ -27,7 +27,7 @@ import Widget from 'components/Widget';
 
 import ContribuyentesSelectItem from 'pages/CRUD/Contribuyentes/helpers/ContribuyentesSelectItem';
 
-const VentasForm = (props) => {
+const ComprasForm = (props) => {
   const {
     isEditing,
     isProfile,
@@ -40,15 +40,15 @@ const VentasForm = (props) => {
   } = props;
 
   const iniValues = () => {
-    return IniValues(ventasFields, record || {});
+    return IniValues(comprasFields, record || {});
   };
 
   const formValidations = () => {
-    return FormValidations(ventasFields, record || {});
+    return FormValidations(comprasFields, record || {});
   };
 
   const handleSubmit = (values) => {
-    const { id, ...data } = PreparedValues(ventasFields, values || {});
+    const { id, ...data } = PreparedValues(comprasFields, values || {});
     onSubmit(id, data);
   };
 
@@ -57,7 +57,7 @@ const VentasForm = (props) => {
       return 'Edit My Profile';
     }
 
-    return isEditing ? 'Edit Ventas' : 'Add Ventas';
+    return isEditing ? 'Edit Compras' : 'Add Compras';
   };
 
   const renderForm = () => (
@@ -73,87 +73,96 @@ const VentasForm = (props) => {
               <Grid item>
                 <ContribuyentesSelectItem
                   name={'contribuyente'}
-                  schema={ventasFields}
+                  schema={comprasFields}
                   showCreate={!modal}
                   form={form}
                 />
               </Grid>
 
               <Grid item>
-                <InputFormItem name={'razonSocial'} schema={ventasFields} />
-              </Grid>
-
-              <Grid item>
-                <DatePickerFormItem
-                  name={'fechaEmision'}
-                  schema={ventasFields}
+                <RadioFormItem
+                  name={'tipoIdentificacionComprador'}
+                  schema={comprasFields}
                 />
               </Grid>
 
               <Grid item>
                 <InputFormItem
                   name={'numeroIdentificacion'}
-                  schema={ventasFields}
+                  schema={comprasFields}
                 />
               </Grid>
 
               <Grid item>
-                <RadioFormItem
-                  name={'tipoIdentificacionComprador'}
-                  schema={ventasFields}
+                <InputFormItem name={'razonSocial'} schema={comprasFields} />
+              </Grid>
+
+              <Grid item>
+                <DatePickerFormItem
+                  name={'fechaEmision'}
+                  schema={comprasFields}
                 />
               </Grid>
 
               <Grid item>
                 <InputFormItem
                   name={'numeroComprobante'}
-                  schema={ventasFields}
+                  schema={comprasFields}
                 />
               </Grid>
 
               <Grid item>
-                <InputFormItem name={'montoGravado5'} schema={ventasFields} />
+                <InputFormItem name={'mongoGravado10'} schema={comprasFields} />
               </Grid>
 
               <Grid item>
-                <InputFormItem name={'montoGravado10'} schema={ventasFields} />
+                <InputFormItem name={'mongoGravado5'} schema={comprasFields} />
               </Grid>
 
               <Grid item>
-                <InputFormItem name={'exento'} schema={ventasFields} />
+                <InputFormItem name={'timbrado'} schema={comprasFields} />
               </Grid>
 
               <Grid item>
-                <InputFormItem name={'timbrado'} schema={ventasFields} />
+                <InputFormItem name={'exento'} schema={comprasFields} />
               </Grid>
 
               <Grid item>
-                <SwitchFormItem name={'imputaIVA'} schema={ventasFields} />
-              </Grid>
-
-              <Grid item>
-                <SwitchFormItem name={'imputaIRE'} schema={ventasFields} />
-              </Grid>
-
-              <Grid item>
-                <SwitchFormItem name={'imputaIRPRSP'} schema={ventasFields} />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem name={'anexo'} schema={ventasFields} />
-              </Grid>
-
-              <Grid item>
-                <FilesFormItem
-                  name={'documento'}
-                  schema={ventasFields}
-                  path={'ventas/documento'}
+                <ImagesFormItem
+                  name={'anexo'}
+                  schema={comprasFields}
+                  path={'compras/anexo'}
                   fileProps={{
                     size: undefined,
                     formats: undefined,
                   }}
                   max={undefined}
                 />
+              </Grid>
+
+              <Grid item>
+                <FilesFormItem
+                  name={'documento'}
+                  schema={comprasFields}
+                  path={'compras/documento'}
+                  fileProps={{
+                    size: undefined,
+                    formats: undefined,
+                  }}
+                  max={undefined}
+                />
+              </Grid>
+
+              <Grid item>
+                <SwitchFormItem name={'imputaIRE'} schema={comprasFields} />
+              </Grid>
+
+              <Grid item>
+                <SwitchFormItem name={'imputaIVA'} schema={comprasFields} />
+              </Grid>
+
+              <Grid item>
+                <SwitchFormItem name={'imputaIRPRSP'} schema={comprasFields} />
               </Grid>
             </Grid>
             <Grid container spacing={3} mt={2}>
@@ -198,4 +207,4 @@ const VentasForm = (props) => {
   }
   return renderForm();
 };
-export default VentasForm;
+export default ComprasForm;

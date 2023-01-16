@@ -1,7 +1,10 @@
 // eslint-disable-next-line
-import * as dataFormat from 'pages/CRUD/Contribuyentes/table/ContribuyentesDataFormatters';
+import * as dataFormat from 'pages/CRUD/Compras/table/ComprasDataFormatters';
 
-import actions from 'actions/contribuyentes/contribuyentesListActions';
+// eslint-disable-next-line
+import * as contribuyentesDataFormat from 'pages/CRUD/Contribuyentes/table/ContribuyentesDataFormatters';
+
+import actions from 'actions/compras/comprasListActions';
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -52,7 +55,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ContribuyentesTable = () => {
+const ComprasTable = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
@@ -61,7 +64,20 @@ const ContribuyentesTable = () => {
 
   const [filters, setFilters] = React.useState([
     { label: 'Razon Social', title: 'razonSocial' },
-    { label: 'Ruc', title: 'ruc' },
+    { label: 'Numero Comprobante', title: 'numeroComprobante' },
+
+    {
+      label: 'Mongo Gravado 10 (IVA incluido)',
+      title: 'mongoGravado10',
+      number: 'true',
+    },
+    {
+      label: 'Mongo Gravado 5 (IVA incluido)',
+      title: 'mongoGravado5',
+      number: 'true',
+    },
+    { label: 'Exento', title: 'exento', number: 'true' },
+    { label: 'Contribuyente', title: 'contribuyente' },
   ]);
 
   const [filterItems, setFilterItems] = React.useState([]);
@@ -71,12 +87,10 @@ const ContribuyentesTable = () => {
   const [sortModel, setSortModel] = React.useState([]);
   const [selectionModel, setSelectionModel] = React.useState([]);
 
-  const count = useSelector((store) => store.contribuyentes.list.count);
-  const modalOpen = useSelector((store) => store.contribuyentes.list.modalOpen);
-  const rows = useSelector((store) => store.contribuyentes.list.rows);
-  const idToDelete = useSelector(
-    (store) => store.contribuyentes.list.idToDelete,
-  );
+  const count = useSelector((store) => store.compras.list.count);
+  const modalOpen = useSelector((store) => store.compras.list.modalOpen);
+  const rows = useSelector((store) => store.compras.list.rows);
+  const idToDelete = useSelector((store) => store.compras.list.idToDelete);
 
   const [rowsState, setRowsState] = React.useState({
     page: 0,
@@ -143,9 +157,9 @@ const ContribuyentesTable = () => {
     );
   };
 
-  const getContribuyentesCSV = async () => {
+  const getComprasCSV = async () => {
     const response = await axios({
-      url: '/contribuyentes?filetype=csv',
+      url: '/compras?filetype=csv',
       method: 'GET',
       responseType: 'blob',
     });
@@ -153,7 +167,7 @@ const ContribuyentesTable = () => {
     const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = 'contribuyentesCSV.csv';
+    link.download = 'comprasCSV.csv';
     link.click();
   };
 
@@ -216,6 +230,21 @@ const ContribuyentesTable = () => {
 
   const columns = [
     {
+      field: 'contribuyente',
+
+      sortable: false,
+      renderCell: (params) =>
+        contribuyentesDataFormat.listFormatter(
+          params.row[params.field],
+          history,
+          'contribuyentes',
+        ),
+      flex: 1,
+
+      headerName: 'Contribuyente',
+    },
+
+    {
       field: 'razonSocial',
 
       flex: 0.6,
@@ -224,11 +253,49 @@ const ContribuyentesTable = () => {
     },
 
     {
-      field: 'ruc',
+      field: 'fechaEmision',
+
+      headerName: 'Fecha Emisión',
+    },
+
+    {
+      field: 'numeroComprobante',
 
       flex: 0.6,
 
-      headerName: 'Ruc',
+      headerName: 'Numero Comprobante',
+    },
+
+    {
+      field: 'mongoGravado10',
+
+      flex: 0.6,
+
+      headerName: 'Mongo Gravado 10 (IVA incluido)',
+    },
+
+    {
+      field: 'mongoGravado5',
+
+      flex: 0.6,
+
+      headerName: 'Mongo Gravado 5 (IVA incluido)',
+    },
+
+    {
+      field: 'exento',
+
+      flex: 0.6,
+
+      headerName: 'Exento',
+    },
+
+    {
+      field: 'imputaIRPRSP',
+
+      renderCell: (params) => dataFormat.booleanFormatter(params.row),
+
+      headerName: 'Imputa IRP-RSP',
     },
 
     {
@@ -240,7 +307,7 @@ const ContribuyentesTable = () => {
       renderCell: (params) => (
         <Actions
           classes={classes}
-          entity='contribuyentes'
+          entity='compras'
           openModal={openModal}
           {...params}
         />
@@ -250,9 +317,9 @@ const ContribuyentesTable = () => {
 
   return (
     <div>
-      <Widget title={<h4>{humanize('Contribuyentes')}</h4>} disableWidgetMenu>
+      <Widget title={<h4>{humanize('Compras')}</h4>} disableWidgetMenu>
         <Box className={classes.actions}>
-          <Link to='/admin/contribuyentes/new' className={classes.element}>
+          <Link to='/admin/compras/new' className={classes.element}>
             <Button variant='contained'>New</Button>
           </Link>
           <Button
@@ -266,7 +333,7 @@ const ContribuyentesTable = () => {
           <Button
             type='button'
             variant='contained'
-            onClick={getContribuyentesCSV}
+            onClick={getComprasCSV}
             className={classes.element}
           >
             Export CSV
@@ -404,7 +471,7 @@ const ContribuyentesTable = () => {
             disableColumnMenu
             loading={loading}
             onRowClick={(e) => {
-              history.push(`/admin/contribuyentes/${e.id}/edit`);
+              history.push(`/admin/compras/${e.id}/edit`);
             }}
             autoHeight
           />
@@ -416,11 +483,11 @@ const ContribuyentesTable = () => {
             target={'_blank'}
             href={
               process.env.NODE_ENV === 'production'
-                ? window.location.origin + '/api-docs/#/Contribuyentes'
-                : 'http://localhost:8080/api-docs/#/Contribuyentes'
+                ? window.location.origin + '/api-docs/#/Compras'
+                : 'http://localhost:8080/api-docs/#/Compras'
             }
           >
-            API documentation for contribuyentes
+            API documentation for compras
           </LinkMaterial>
         </div>
       </Widget>
@@ -436,4 +503,4 @@ const ContribuyentesTable = () => {
   );
 };
 
-export default ContribuyentesTable;
+export default ComprasTable;

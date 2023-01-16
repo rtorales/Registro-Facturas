@@ -1,7 +1,7 @@
 const express = require('express');
 
-const VentasService = require('../services/ventas');
-const VentasDBApi = require('../db/api/ventas');
+const ComprasService = require('../services/compras');
+const ComprasDBApi = require('../db/api/compras');
 const wrapAsync = require('../helpers').wrapAsync;
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const { parse } = require('json2csv');
  *  @swagger
  *  components:
  *    schemas:
- *      Ventas:
+ *      Compras:
  *        type: object
  *        properties:
 
@@ -22,14 +22,10 @@ const { parse } = require('json2csv');
  *            type: string
  *            default: numeroComprobante
 
- *          timbrado:
+ *          mongoGravado10:
  *            type: integer
  *            format: int64
-
- *          montoGravado5:
- *            type: integer
- *            format: int64
- *          montoGravado10:
+ *          mongoGravado5:
  *            type: integer
  *            format: int64
  *          exento:
@@ -41,17 +37,17 @@ const { parse } = require('json2csv');
 /**
  *  @swagger
  * tags:
- *   name: Ventas
- *   description: The Ventas managing API
+ *   name: Compras
+ *   description: The Compras managing API
  */
 
 /**
  *  @swagger
- *  /api/ventas:
+ *  /api/compras:
  *    post:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
+ *      tags: [Compras]
  *      summary: Add new item
  *      description: Add new item
  *      requestBody:
@@ -63,14 +59,14 @@ const { parse } = require('json2csv');
  *                data:
  *                  description: Data of the updated item
  *                  type: object
- *                  $ref: "#/components/schemas/Ventas"
+ *                  $ref: "#/components/schemas/Compras"
  *      responses:
  *        200:
  *          description: The item was successfully added
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Ventas"
+ *                $ref: "#/components/schemas/Compras"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        405:
@@ -80,7 +76,7 @@ const { parse } = require('json2csv');
  */
 
 router.post('/', async (req, res) => {
-  await VentasService.create(
+  await ComprasService.create(
     req.body.data,
     req.currentUser,
     true,
@@ -92,11 +88,11 @@ router.post('/', async (req, res) => {
 
 /**
  *  @swagger
- *  /api/ventas/{id}:
+ *  /api/compras/{id}:
  *    put:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
+ *      tags: [Compras]
  *      summary: Update the data of the selected item
  *      description: Update the data of the selected item
  *      parameters:
@@ -119,7 +115,7 @@ router.post('/', async (req, res) => {
  *                data:
  *                  description: Data of the updated item
  *                  type: object
- *                  $ref: "#/components/schemas/Ventas"
+ *                  $ref: "#/components/schemas/Compras"
  *              required:
  *                - id
  *      responses:
@@ -128,7 +124,7 @@ router.post('/', async (req, res) => {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Ventas"
+ *                $ref: "#/components/schemas/Compras"
  *        400:
  *          description: Invalid ID supplied
  *        401:
@@ -142,7 +138,7 @@ router.post('/', async (req, res) => {
 router.put(
   '/:id',
   wrapAsync(async (req, res) => {
-    await VentasService.update(req.body.data, req.body.id, req.currentUser);
+    await ComprasService.update(req.body.data, req.body.id, req.currentUser);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -150,11 +146,11 @@ router.put(
 
 /**
  * @swagger
- *  /api/ventas/{id}:
+ *  /api/compras/{id}:
  *    delete:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
+ *      tags: [Compras]
  *      summary: Delete the selected item
  *      description: Delete the selected item
  *      parameters:
@@ -170,7 +166,7 @@ router.put(
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Ventas"
+ *                $ref: "#/components/schemas/Compras"
  *        400:
  *          description: Invalid ID supplied
  *        401:
@@ -184,7 +180,7 @@ router.put(
 router.delete(
   '/:id',
   wrapAsync(async (req, res) => {
-    await VentasService.remove(req.params.id, req.currentUser);
+    await ComprasService.remove(req.params.id, req.currentUser);
     const payload = true;
     res.status(200).send(payload);
   }),
@@ -192,22 +188,22 @@ router.delete(
 
 /**
  *  @swagger
- *  /api/ventas:
+ *  /api/compras:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
- *      summary: Get all ventas
- *      description: Get all ventas
+ *      tags: [Compras]
+ *      summary: Get all compras
+ *      description: Get all compras
  *      responses:
  *        200:
- *          description: Ventas list successfully received
+ *          description: Compras list successfully received
  *          content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
- *                  $ref: "#/components/schemas/Ventas"
+ *                  $ref: "#/components/schemas/Compras"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -220,15 +216,15 @@ router.get(
   '/',
   wrapAsync(async (req, res) => {
     const filetype = req.query.filetype;
-    const payload = await VentasDBApi.findAll(req.query);
+    const payload = await ComprasDBApi.findAll(req.query);
     if (filetype && filetype === 'csv') {
       const fields = [
         'id',
         'razonSocial',
         'numeroComprobante',
-        'timbrado',
-        'montoGravado5',
-        'montoGravado10',
+
+        'mongoGravado10',
+        'mongoGravado5',
         'exento',
 
         'fechaEmision',
@@ -249,22 +245,22 @@ router.get(
 
 /**
  *  @swagger
- *  /api/ventas/count:
+ *  /api/compras/count:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
- *      summary: Count all ventas
- *      description: Count all ventas
+ *      tags: [Compras]
+ *      summary: Count all compras
+ *      description: Count all compras
  *      responses:
  *        200:
- *          description: Ventas count successfully received
+ *          description: Compras count successfully received
  *          content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
- *                  $ref: "#/components/schemas/Ventas"
+ *                  $ref: "#/components/schemas/Compras"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -275,7 +271,7 @@ router.get(
 router.get(
   '/count',
   wrapAsync(async (req, res) => {
-    const payload = await VentasDBApi.findAll(req.query, { countOnly: true });
+    const payload = await ComprasDBApi.findAll(req.query, { countOnly: true });
 
     res.status(200).send(payload);
   }),
@@ -283,22 +279,22 @@ router.get(
 
 /**
  *  @swagger
- *  /api/ventas/autocomplete:
+ *  /api/compras/autocomplete:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
- *      summary: Find all ventas that match search criteria
- *      description: Find all ventas that match search criteria
+ *      tags: [Compras]
+ *      summary: Find all compras that match search criteria
+ *      description: Find all compras that match search criteria
  *      responses:
  *        200:
- *          description: Ventas list successfully received
+ *          description: Compras list successfully received
  *          content:
  *            application/json:
  *              schema:
  *                type: array
  *                items:
- *                  $ref: "#/components/schemas/Ventas"
+ *                  $ref: "#/components/schemas/Compras"
  *        401:
  *          $ref: "#/components/responses/UnauthorizedError"
  *        404:
@@ -307,7 +303,7 @@ router.get(
  *          description: Some server error
  */
 router.get('/autocomplete', async (req, res) => {
-  const payload = await VentasDBApi.findAllAutocomplete(
+  const payload = await ComprasDBApi.findAllAutocomplete(
     req.query.query,
     req.query.limit,
   );
@@ -317,11 +313,11 @@ router.get('/autocomplete', async (req, res) => {
 
 /**
  * @swagger
- *  /api/ventas/{id}:
+ *  /api/compras/{id}:
  *    get:
  *      security:
  *        - bearerAuth: []
- *      tags: [Ventas]
+ *      tags: [Compras]
  *      summary: Get selected item
  *      description: Get selected item
  *      parameters:
@@ -337,7 +333,7 @@ router.get('/autocomplete', async (req, res) => {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/Ventas"
+ *                $ref: "#/components/schemas/Compras"
  *        400:
  *          description: Invalid ID supplied
  *        401:
@@ -351,7 +347,7 @@ router.get('/autocomplete', async (req, res) => {
 router.get(
   '/:id',
   wrapAsync(async (req, res) => {
-    const payload = await VentasDBApi.findBy({ id: req.params.id });
+    const payload = await ComprasDBApi.findBy({ id: req.params.id });
 
     res.status(200).send(payload);
   }),

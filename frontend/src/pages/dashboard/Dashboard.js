@@ -19,17 +19,24 @@ const Dashboard = () => {
 
   const [users, setUsers] = useState(0);
   const [contribuyentes, setContribuyentes] = useState(0);
+  const [compras, setCompras] = useState(0);
   const [ventas, setVentas] = useState(0);
 
   const [currentUser, setCurrentUser] = useState(null);
 
   async function loadData() {
-    const fns = [setUsers, setContribuyentes, setVentas];
+    const fns = [setUsers, setContribuyentes, setCompras, setVentas];
 
     const responseUsers = await axios.get(`/users/count`);
     const responseContribuyentes = await axios.get(`/contribuyentes/count`);
+    const responseCompras = await axios.get(`/compras/count`);
     const responseVentas = await axios.get(`/ventas/count`);
-    Promise.all([responseUsers, responseContribuyentes, responseVentas])
+    Promise.all([
+      responseUsers,
+      responseContribuyentes,
+      responseCompras,
+      responseVentas,
+    ])
       .then((res) => res.map((el) => el.data))
       .then((data) => data.forEach((el, i) => fns[i](el.count)));
   }
@@ -95,6 +102,25 @@ const Dashboard = () => {
                   <span className={classes.widgetTextCount}>
                     {contribuyentes}
                   </span>
+                </p>
+              </div>
+            </Widget>
+          </Link>
+        </Grid>
+
+        <Grid item xs={12} sm={6} lg={4} xl={3}>
+          <Link to={'/admin/compras'} style={{ textDecoration: 'none' }}>
+            <Widget title={'Compras'}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <InfoIcon color='primary' sx={{ mr: 1 }} />
+                <p className={classes.widgetText}>
+                  Compras:{' '}
+                  <span className={classes.widgetTextCount}>{compras}</span>
                 </p>
               </div>
             </Widget>

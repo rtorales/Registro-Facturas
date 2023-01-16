@@ -5,31 +5,13 @@ const bcrypt = require('bcrypt');
 const moment = require('moment');
 
 module.exports = function (sequelize, DataTypes) {
-  const ventas = sequelize.define(
-    'ventas',
+  const compras = sequelize.define(
+    'compras',
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-      },
-
-      razonSocial: {
-        type: DataTypes.TEXT,
-      },
-
-      fechaEmision: {
-        type: DataTypes.DATEONLY,
-
-        get: function () {
-          return this.getDataValue('fechaEmision')
-            ? moment.utc(this.getDataValue('fechaEmision')).format('YYYY-MM-DD')
-            : null;
-        },
-      },
-
-      numeroIdentificacion: {
-        type: DataTypes.TEXT,
       },
 
       tipoIdentificacionComprador: {
@@ -46,25 +28,39 @@ module.exports = function (sequelize, DataTypes) {
 
           'SIN NOMBRE',
 
-          'DIPLOMÁTICO',
+          'DIPOMÁTICO',
 
           'IDENTIFICACIÓN TRIBUTARIA',
         ],
+      },
+
+      numeroIdentificacion: {
+        type: DataTypes.TEXT,
+      },
+
+      razonSocial: {
+        type: DataTypes.TEXT,
+      },
+
+      fechaEmision: {
+        type: DataTypes.DATEONLY,
+
+        get: function () {
+          return this.getDataValue('fechaEmision')
+            ? moment.utc(this.getDataValue('fechaEmision')).format('YYYY-MM-DD')
+            : null;
+        },
       },
 
       numeroComprobante: {
         type: DataTypes.TEXT,
       },
 
-      montoGravado5: {
+      mongoGravado10: {
         type: DataTypes.DECIMAL,
       },
 
-      montoGravado10: {
-        type: DataTypes.DECIMAL,
-      },
-
-      exento: {
+      mongoGravado5: {
         type: DataTypes.DECIMAL,
       },
 
@@ -72,14 +68,18 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.INTEGER,
       },
 
-      imputaIVA: {
+      exento: {
+        type: DataTypes.DECIMAL,
+      },
+
+      imputaIRE: {
         type: DataTypes.BOOLEAN,
 
         allowNull: false,
         defaultValue: false,
       },
 
-      imputaIRE: {
+      imputaIVA: {
         type: DataTypes.BOOLEAN,
 
         allowNull: false,
@@ -91,10 +91,6 @@ module.exports = function (sequelize, DataTypes) {
 
         allowNull: false,
         defaultValue: false,
-      },
-
-      anexo: {
-        type: DataTypes.TEXT,
       },
 
       importHash: {
@@ -110,8 +106,8 @@ module.exports = function (sequelize, DataTypes) {
     },
   );
 
-  ventas.associate = (db) => {
-    db.ventas.belongsTo(db.contribuyentes, {
+  compras.associate = (db) => {
+    db.compras.belongsTo(db.contribuyentes, {
       as: 'contribuyente',
       foreignKey: {
         name: 'contribuyenteId',
@@ -119,24 +115,34 @@ module.exports = function (sequelize, DataTypes) {
       constraints: false,
     });
 
-    db.ventas.hasMany(db.file, {
+    db.compras.hasMany(db.file, {
+      as: 'anexo',
+      foreignKey: 'belongsToId',
+      constraints: false,
+      scope: {
+        belongsTo: db.compras.getTableName(),
+        belongsToColumn: 'anexo',
+      },
+    });
+
+    db.compras.hasMany(db.file, {
       as: 'documento',
       foreignKey: 'belongsToId',
       constraints: false,
       scope: {
-        belongsTo: db.ventas.getTableName(),
+        belongsTo: db.compras.getTableName(),
         belongsToColumn: 'documento',
       },
     });
 
-    db.ventas.belongsTo(db.users, {
+    db.compras.belongsTo(db.users, {
       as: 'createdBy',
     });
 
-    db.ventas.belongsTo(db.users, {
+    db.compras.belongsTo(db.users, {
       as: 'updatedBy',
     });
   };
 
-  return ventas;
+  return compras;
 };
