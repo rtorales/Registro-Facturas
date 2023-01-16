@@ -18,14 +18,20 @@ const Dashboard = () => {
   const managementValue = useManagementState();
 
   const [users, setUsers] = useState(0);
+  const [contribuyente, setContribuyente] = useState(0);
+  const [compra, setCompra] = useState(0);
+  const [venta, setVenta] = useState(0);
 
   const [currentUser, setCurrentUser] = useState(null);
 
   async function loadData() {
-    const fns = [setUsers,];
+    const fns = [setUsers,setContribuyente,setCompra,setVenta,];
 
     const responseUsers = await axios.get(`/users/count`);
-      Promise.all([responseUsers,])
+    const responseContribuyente = await axios.get(`/contribuyente/count`);
+    const responseCompra = await axios.get(`/compra/count`);
+    const responseVenta = await axios.get(`/venta/count`);
+      Promise.all([responseUsers,responseContribuyente,responseCompra,responseVenta,])
           .then((res) => res.map((el) => el.data))
           .then((data) => data.forEach((el, i) => fns[i](el.count)));
   }
@@ -69,6 +75,54 @@ const Dashboard = () => {
             >
               <InfoIcon color='primary' sx={{ mr: 1 }} />
               <p className={classes.widgetText}>Users: <span className={classes.widgetTextCount}>{users}</span></p>
+            </div>
+          </Widget>
+        </Link>
+        </Grid>
+
+    <Grid item xs={12} sm={6} lg={4} xl={3}>
+        <Link to={'/admin/contribuyente'} style={{ textDecoration: 'none' }}>
+          <Widget title={'Contribuyente'}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <InfoIcon color='primary' sx={{ mr: 1 }} />
+              <p className={classes.widgetText}>Contribuyente: <span className={classes.widgetTextCount}>{contribuyente}</span></p>
+            </div>
+          </Widget>
+        </Link>
+        </Grid>
+
+    <Grid item xs={12} sm={6} lg={4} xl={3}>
+        <Link to={'/admin/compra'} style={{ textDecoration: 'none' }}>
+          <Widget title={'Compra'}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <InfoIcon color='primary' sx={{ mr: 1 }} />
+              <p className={classes.widgetText}>Compra: <span className={classes.widgetTextCount}>{compra}</span></p>
+            </div>
+          </Widget>
+        </Link>
+        </Grid>
+
+    <Grid item xs={12} sm={6} lg={4} xl={3}>
+        <Link to={'/admin/venta'} style={{ textDecoration: 'none' }}>
+          <Widget title={'Venta'}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <InfoIcon color='primary' sx={{ mr: 1 }} />
+              <p className={classes.widgetText}>Venta: <span className={classes.widgetTextCount}>{venta}</span></p>
             </div>
           </Widget>
         </Link>
