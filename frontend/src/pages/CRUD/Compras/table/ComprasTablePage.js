@@ -7,6 +7,6 @@ const ComprasTablePage = () => {
       <ComprasTable />
     </div>
   );
-};
+}
 
 export default ComprasTablePage;

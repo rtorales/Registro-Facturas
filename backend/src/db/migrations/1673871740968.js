@@ -1,58 +1,70 @@
 module.exports = {
-  /**
-   * @param {QueryInterface} queryInterface
-   * @param {Sequelize} Sequelize
-   * @returns {Promise<void>}
-   */
-  async up(queryInterface, Sequelize) {
     /**
-     * @type {Transaction}
+     * @param {QueryInterface} queryInterface
+     * @param {Sequelize} Sequelize
+     * @returns {Promise<void>}
      */
-    const transaction = await queryInterface.sequelize.transaction();
-    try {
-      await queryInterface.removeColumn('ventas', 'timbrado', { transaction });
+    async up(queryInterface, Sequelize) {
+        /**
+         * @type {Transaction}
+         */
+        const transaction = await queryInterface.sequelize.transaction();
+        try {
 
-      await queryInterface.addColumn(
-        'ventas',
-        'timbrado',
-        {
-          type: Sequelize.DataTypes.INTEGER,
-        },
-        { transaction },
-      );
+                    await queryInterface.removeColumn(
+                        'ventas',
+                        'timbrado',
+                        { transaction }
+                    );
 
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
-  },
-  /**
-   * @param {QueryInterface} queryInterface
-   * @param {Sequelize} Sequelize
-   * @returns {Promise<void>}
-   */
-  async down(queryInterface, Sequelize) {
+                    await queryInterface.addColumn(
+                      'ventas',
+                      'timbrado',
+                      {
+                          type: Sequelize.DataTypes.INTEGER,
+
+                      },
+                      { transaction }
+                    );
+
+            await transaction.commit();
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    },
     /**
-     * @type {Transaction}
+     * @param {QueryInterface} queryInterface
+     * @param {Sequelize} Sequelize
+     * @returns {Promise<void>}
      */
-    const transaction = await queryInterface.sequelize.transaction();
-    try {
-      await queryInterface.removeColumn('ventas', 'timbrado', { transaction });
+    async down(queryInterface, Sequelize) {
+        /**
+         * @type {Transaction}
+         */
+        const transaction = await queryInterface.sequelize.transaction();
+        try {
 
-      await queryInterface.addColumn(
-        'ventas',
-        'timbrado',
-        {
-          type: Sequelize.DataTypes.TEXT,
-        },
-        { transaction },
-      );
+                    await queryInterface.removeColumn(
+                        'ventas',
+                        'timbrado',
+                        { transaction }
+                    );
 
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
+                    await queryInterface.addColumn(
+                      'ventas',
+                      'timbrado',
+                      {
+                          type: Sequelize.DataTypes.TEXT,
+
+                      },
+                      { transaction }
+                    );
+
+            await transaction.commit();
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
     }
-  },
 };

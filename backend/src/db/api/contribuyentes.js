@@ -1,3 +1,4 @@
+
 const db = require('../models');
 const FileDBApi = require('./file');
 const crypto = require('crypto');
@@ -7,28 +8,37 @@ const Sequelize = db.Sequelize;
 const Op = Sequelize.Op;
 
 module.exports = class ContribuyentesDBApi {
+
   static async create(data, options) {
-    const currentUser = (options && options.currentUser) || { id: null };
-    const transaction = (options && options.transaction) || undefined;
+  const currentUser = (options && options.currentUser) || { id: null };
+  const transaction = (options && options.transaction) || undefined;
 
-    const contribuyentes = await db.contribuyentes.create(
-      {
-        id: data.id || undefined,
+  const contribuyentes = await db.contribuyentes.create(
+  {
+  id: data.id || undefined,
 
-        razonSocial: data.razonSocial || null,
-        ruc: data.ruc || null,
-        importHash: data.importHash || null,
-        createdById: currentUser.id,
-        updatedById: currentUser.id,
-      },
-      { transaction },
-    );
+    razonSocial: data.razonSocial
+    ||
+    null
+,
 
-    return contribuyentes;
+    ruc: data.ruc
+    ||
+    null
+,
+
+  importHash: data.importHash || null,
+  createdById: currentUser.id,
+  updatedById: currentUser.id,
+  },
+  { transaction },
+  );
+
+  return contribuyentes;
   }
 
   static async update(id, data, options) {
-    const currentUser = (options && options.currentUser) || { id: null };
+    const currentUser = (options && options.currentUser) || {id: null};
     const transaction = (options && options.transaction) || undefined;
 
     const contribuyentes = await db.contribuyentes.findByPk(id, {
@@ -37,33 +47,39 @@ module.exports = class ContribuyentesDBApi {
 
     await contribuyentes.update(
       {
-        razonSocial: data.razonSocial || null,
-        ruc: data.ruc || null,
+
+        razonSocial: data.razonSocial
+        ||
+        null
+,
+
+        ruc: data.ruc
+        ||
+        null
+,
+
         updatedById: currentUser.id,
       },
-      { transaction },
+      {transaction},
     );
 
     return contribuyentes;
   }
 
   static async remove(id, options) {
-    const currentUser = (options && options.currentUser) || { id: null };
+    const currentUser = (options && options.currentUser) || {id: null};
     const transaction = (options && options.transaction) || undefined;
 
     const contribuyentes = await db.contribuyentes.findByPk(id, options);
 
-    await contribuyentes.update(
-      {
-        deletedBy: currentUser.id,
-      },
-      {
-        transaction,
-      },
-    );
+    await contribuyentes.update({
+      deletedBy: currentUser.id
+    }, {
+      transaction,
+    });
 
     await contribuyentes.destroy({
-      transaction,
+      transaction
     });
 
     return contribuyentes;
@@ -81,7 +97,7 @@ module.exports = class ContribuyentesDBApi {
       return contribuyentes;
     }
 
-    const output = contribuyentes.get({ plain: true });
+    const output = contribuyentes.get({plain: true});
 
     return output;
   }
@@ -97,7 +113,9 @@ module.exports = class ContribuyentesDBApi {
 
     const transaction = (options && options.transaction) || undefined;
     let where = {};
-    let include = [];
+    let include = [
+
+    ];
 
     if (filter) {
       if (filter.id) {
@@ -121,7 +139,11 @@ module.exports = class ContribuyentesDBApi {
       if (filter.ruc) {
         where = {
           ...where,
-          [Op.and]: Utils.ilike('contribuyentes', 'ruc', filter.ruc),
+          [Op.and]: Utils.ilike(
+            'contribuyentes',
+            'ruc',
+            filter.ruc,
+          ),
         };
       }
 
@@ -133,7 +155,9 @@ module.exports = class ContribuyentesDBApi {
       ) {
         where = {
           ...where,
-          active: filter.active === true || filter.active === 'true',
+          active:
+            filter.active === true ||
+            filter.active === 'true',
         };
       }
 
@@ -162,39 +186,35 @@ module.exports = class ContribuyentesDBApi {
       }
     }
 
-    let { rows, count } = options?.countOnly
-      ? {
-          rows: [],
-          count: await db.contribuyentes.count({
+    let { rows, count } = options?.countOnly ? {rows: [], count: await db.contribuyentes.count({
             where,
             include,
             distinct: true,
             limit: limit ? Number(limit) : undefined,
             offset: offset ? Number(offset) : undefined,
-            order:
-              filter.field && filter.sort
+            order: (filter.field && filter.sort)
                 ? [[filter.field, filter.sort]]
                 : [['createdAt', 'desc']],
             transaction,
-          }),
-        }
-      : await db.contribuyentes.findAndCountAll({
-          where,
-          include,
-          distinct: true,
-          limit: limit ? Number(limit) : undefined,
-          offset: offset ? Number(offset) : undefined,
-          order:
-            filter.field && filter.sort
-              ? [[filter.field, filter.sort]]
-              : [['createdAt', 'desc']],
-          transaction,
-        });
+        },
+    )} : await db.contribuyentes.findAndCountAll(
+        {
+            where,
+            include,
+            distinct: true,
+            limit: limit ? Number(limit) : undefined,
+            offset: offset ? Number(offset) : undefined,
+            order: (filter.field && filter.sort)
+                ? [[filter.field, filter.sort]]
+                : [['createdAt', 'desc']],
+            transaction,
+        },
+    );
 
-    //    rows = await this._fillWithRelationsAndFilesForRows(
-    //      rows,
-    //      options,
-    //    );
+//    rows = await this._fillWithRelationsAndFilesForRows(
+//      rows,
+//      options,
+//    );
 
     return { rows, count };
   }
@@ -206,13 +226,17 @@ module.exports = class ContribuyentesDBApi {
       where = {
         [Op.or]: [
           { ['id']: Utils.uuid(query) },
-          Utils.ilike('contribuyentes', 'razonSocial', query),
+          Utils.ilike(
+            'contribuyentes',
+            'razonSocial',
+            query,
+          ),
         ],
       };
     }
 
     const records = await db.contribuyentes.findAll({
-      attributes: ['id', 'razonSocial'],
+      attributes: [ 'id', 'razonSocial' ],
       where,
       limit: limit ? Number(limit) : undefined,
       orderBy: [['razonSocial', 'ASC']],
@@ -223,4 +247,6 @@ module.exports = class ContribuyentesDBApi {
       label: record.razonSocial,
     }));
   }
+
 };
+

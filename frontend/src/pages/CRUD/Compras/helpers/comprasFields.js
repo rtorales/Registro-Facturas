@@ -1,127 +1,169 @@
+
 const comprasFields = {
-  id: { type: 'id', label: 'ID' },
+	id: { type: 'id', label: 'ID' },
 
-  contribuyente: {
-    type: 'relation_one',
-    label: 'Contribuyente',
-
-    options: [{ value: 'value', label: 'value' }],
-  },
-
-  tipoIdentificacionComprador: {
-    type: 'enum',
-    label: 'Tipo Identificación Comprador',
+    contribuyente: { type: 'relation_one', label: 'Contribuyente',
 
     options: [
-      { value: 'RUC', label: 'RUC' },
 
-      { value: 'CÉDULA DE IDENTIDAD', label: 'CÉDULA DE IDENTIDAD' },
+    { value: 'value', label: 'value' },
 
-      { value: 'PASAPORTE', label: 'PASAPORTE' },
+]
 
-      { value: 'CÉDULA EXTRANJERO', label: 'CÉDULA EXTRANJERO' },
+    },
 
-      { value: 'SIN NOMBRE', label: 'SIN NOMBRE' },
+    tipoIdentificacionComprador: { type: 'enum', label: 'Tipo Identificación Comprador',
 
-      { value: 'DIPOMÁTICO', label: 'DIPOMÁTICO' },
+    options: [
 
-      {
-        value: 'IDENTIFICACIÓN TRIBUTARIA',
-        label: 'IDENTIFICACIÓN TRIBUTARIA',
-      },
-    ],
-  },
+    { value: 'RUC', label: 'RUC' },
 
-  numeroIdentificacion: {
-    type: 'string',
-    label: 'Numero Identificación',
+    { value: 'CÉDULA DE IDENTIDAD', label: 'CÉDULA DE IDENTIDAD' },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    { value: 'PASAPORTE', label: 'PASAPORTE' },
 
-  razonSocial: {
-    type: 'string',
-    label: 'Razon Social',
+    { value: 'CÉDULA EXTRANJERO', label: 'CÉDULA EXTRANJERO' },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    { value: 'SIN NOMBRE', label: 'SIN NOMBRE' },
 
-  fechaEmision: {
-    type: 'date',
-    label: 'Fecha Emisión',
+    { value: 'DIPOMÁTICO', label: 'DIPOMÁTICO' },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    { value: 'IDENTIFICACIÓN TRIBUTARIA', label: 'IDENTIFICACIÓN TRIBUTARIA' },
 
-  numeroComprobante: {
-    type: 'string',
-    label: 'Numero Comprobante',
+]
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    },
 
-  mongoGravado10: {
-    type: 'decimal',
-    label: 'Mongo Gravado 10 (IVA incluido)',
+    numeroIdentificacion: { type: 'string', label: 'Numero Identificación',
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    options: [
 
-  mongoGravado5: {
-    type: 'decimal',
-    label: 'Mongo Gravado 5 (IVA incluido)',
+    { value: 'value', label: 'value' },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+]
 
-  timbrado: {
-    type: 'int',
-    label: 'Timbrado',
+    },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    razonSocial: { type: 'string', label: 'Razon Social',
 
-  exento: {
-    type: 'decimal',
-    label: 'Exento',
+    options: [
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    { value: 'value', label: 'value' },
 
-  anexo: {
-    type: 'images',
-    label: 'Anexo',
+]
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    },
 
-  documento: {
-    type: 'files',
-    label: 'Documento',
+    fechaEmision: { type: 'date', label: 'Fecha Emisión',
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    options: [
 
-  imputaIRE: {
-    type: 'boolean',
-    label: 'Imputa IRE',
+    { value: 'value', label: 'value' },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+]
 
-  imputaIVA: {
-    type: 'boolean',
-    label: 'Imputa IVA',
+    },
 
-    options: [{ value: 'value', label: 'value' }],
-  },
+    numeroComprobante: { type: 'string', label: 'Numero Comprobante',
 
-  imputaIRPRSP: {
-    type: 'boolean',
-    label: 'Imputa IRP-RSP',
+    options: [
 
-    options: [{ value: 'value', label: 'value' }],
-  },
-};
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    mongoGravado10: { type: 'decimal', label: 'Mongo Gravado 10 (IVA incluido)',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    mongoGravado5: { type: 'decimal', label: 'Mongo Gravado 5 (IVA incluido)',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    timbrado: { type: 'int', label: 'Timbrado',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    exento: { type: 'decimal', label: 'Exento',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    anexo: { type: 'images', label: 'Anexo',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    documento: { type: 'files', label: 'Documento',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    imputaIRE: { type: 'boolean', label: 'Imputa IRE',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    imputaIVA: { type: 'boolean', label: 'Imputa IVA',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+    imputaIRPRSP: { type: 'boolean', label: 'Imputa IRP-RSP',
+
+    options: [
+
+    { value: 'value', label: 'value' },
+
+]
+
+    },
+
+}
 
 export default comprasFields;

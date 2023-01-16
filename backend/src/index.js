@@ -24,18 +24,17 @@ const ventasRoutes = require('./routes/ventas');
 
 const options = {
   definition: {
-    openapi: '3.0.0',
-    info: {
-      version: '1.0.0',
-      title: 'Registro Facturas',
-      description:
-        'Registro Facturas Online REST API for Testing and Prototyping application. You can perform all major operations with your entities - create, delete and etc.',
-    },
+    openapi: "3.0.0",
+      info: {
+        version: "1.0.0",
+        title: "Registro Facturas",
+        description: "Registro Facturas Online REST API for Testing and Prototyping application. You can perform all major operations with your entities - create, delete and etc.",
+      },
     servers: [
       {
         url: config.swaggerUrl,
-        description: 'Development server',
-      },
+        description: "Development server",
+      }
     ],
     components: {
       securitySchemes: {
@@ -43,35 +42,28 @@ const options = {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
-        },
+        }
       },
       responses: {
         UnauthorizedError: {
-          description: 'Access token is missing or invalid',
-        },
-      },
+          description: "Access token is missing or invalid"
+        }
+      }
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    security: [{
+      bearerAuth: []
+    }]
   },
-  apis: ['./src/routes/*.js'],
+  apis: ["./src/routes/*.js"],
 };
 
 const specs = swaggerJsDoc(options);
-app.use(
-  '/api-docs',
-  function (req, res, next) {
+app.use('/api-docs', function (req, res, next) {
     swaggerUI.host = req.get('host');
-    next();
-  },
-  swaggerUI.serve,
-  swaggerUI.setup(specs),
-);
+    next()
+  }, swaggerUI.serve, swaggerUI.setup(specs))
 
-app.use(cors({ origin: true }));
+app.use(cors({origin: true}));
 require('./auth/auth');
 
 app.use(bodyParser.json());
@@ -79,37 +71,26 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/file', fileRoutes);
 
-app.use(
-  '/api/users',
-  passport.authenticate('jwt', { session: false }),
-  usersRoutes,
-);
+app.use('/api/users', passport.authenticate('jwt', {session: false}), usersRoutes);
 
-app.use(
-  '/api/contribuyentes',
-  passport.authenticate('jwt', { session: false }),
-  contribuyentesRoutes,
-);
+app.use('/api/contribuyentes', passport.authenticate('jwt', {session: false}), contribuyentesRoutes);
 
-app.use(
-  '/api/compras',
-  passport.authenticate('jwt', { session: false }),
-  comprasRoutes,
-);
+app.use('/api/compras', passport.authenticate('jwt', {session: false}), comprasRoutes);
 
-app.use(
-  '/api/ventas',
-  passport.authenticate('jwt', { session: false }),
-  ventasRoutes,
-);
+app.use('/api/ventas', passport.authenticate('jwt', {session: false}), ventasRoutes);
 
-const publicDir = path.join(__dirname, '../public');
+const publicDir = path.join(
+  __dirname,
+  '../public',
+);
 
 if (fs.existsSync(publicDir)) {
   app.use('/', express.static(publicDir));
 
-  app.get('*', function (request, response) {
-    response.sendFile(path.resolve(publicDir, 'index.html'));
+  app.get('*', function(request, response) {
+    response.sendFile(
+      path.resolve(publicDir, 'index.html'),
+    );
   });
 }
 

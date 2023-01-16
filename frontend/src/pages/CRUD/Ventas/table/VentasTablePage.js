@@ -7,6 +7,6 @@ const VentasTablePage = () => {
       <VentasTable />
     </div>
   );
-};
+}
 
 export default VentasTablePage;

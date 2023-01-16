@@ -17,14 +17,14 @@ const actions = {
         type: 'COMPRAS_FORM_FIND_STARTED',
       });
 
-      axios.get(`/compras/${id}`).then((res) => {
+      axios.get(`/compras/${id}`).then(res => {
         const record = res.data;
 
         dispatch({
           type: 'COMPRAS_FORM_FIND_SUCCESS',
           payload: record,
         });
-      });
+      })
     } catch (error) {
       Errors.handle(error);
 
@@ -42,13 +42,13 @@ const actions = {
         type: 'COMPRAS_FORM_CREATE_STARTED',
       });
 
-      axios.post('/compras', { data: values }).then((res) => {
+      axios.post('/compras', { data: values }).then(res => {
         dispatch({
           type: 'COMPRAS_FORM_CREATE_SUCCESS',
         });
         showSnackbar({ type: 'success', message: 'Compras created' });
         dispatch(push('/admin/compras'));
-      });
+      })
     } catch (error) {
       Errors.handle(error);
 
@@ -58,13 +58,16 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, isProfile) => async (dispatch, getState) => {
+  doUpdate: (id, values, isProfile) => async (
+    dispatch,
+    getState,
+  ) => {
     try {
       dispatch({
         type: 'COMPRAS_FORM_UPDATE_STARTED',
       });
 
-      await axios.put(`/compras/${id}`, { id, data: values });
+      await axios.put(`/compras/${id}`, {id, data: values});
 
       dispatch(doInit());
 

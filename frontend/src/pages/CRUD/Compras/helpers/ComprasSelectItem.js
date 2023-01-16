@@ -30,9 +30,7 @@ const ComprasSelectItem = (props) => {
         return undefined;
       }
 
-      let label = originalValue.label
-        ? originalValue.label
-        : originalValue.numeroComprobante;
+      let label = originalValue.label ? originalValue.label : originalValue.numeroComprobante;
 
       return {
         id: originalValue.id,
@@ -52,7 +50,10 @@ const ComprasSelectItem = (props) => {
     },
   };
 
-  const { form, ...rest } = props;
+  const {
+    form,
+    ...rest
+  } = props;
 
   return (
     <React.Fragment>
@@ -65,10 +66,12 @@ const ComprasSelectItem = (props) => {
       />
     </React.Fragment>
   );
-};
+}
 
 const select = (state) => ({
-  hasPermissionToCreate: state.compras.hasPermissionToCreate,
+  hasPermissionToCreate: state.compras.hasPermissionToCreate
 });
 
-export default connect(select)(ComprasSelectItem);
+export default connect(select)(
+  ComprasSelectItem,
+);

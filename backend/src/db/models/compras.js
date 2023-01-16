@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const moment = require('moment');
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   const compras = sequelize.define(
     'compras',
     {
@@ -14,83 +14,99 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
       },
 
-      tipoIdentificacionComprador: {
+tipoIdentificacionComprador: {
         type: DataTypes.ENUM,
 
         values: [
-          'RUC',
 
-          'CÉDULA DE IDENTIDAD',
+"RUC",
 
-          'PASAPORTE',
+"CÉDULA DE IDENTIDAD",
 
-          'CÉDULA EXTRANJERO',
+"PASAPORTE",
 
-          'SIN NOMBRE',
+"CÉDULA EXTRANJERO",
 
-          'DIPOMÁTICO',
+"SIN NOMBRE",
 
-          'IDENTIFICACIÓN TRIBUTARIA',
+"DIPOMÁTICO",
+
+"IDENTIFICACIÓN TRIBUTARIA"
+
         ],
+
       },
 
-      numeroIdentificacion: {
+numeroIdentificacion: {
         type: DataTypes.TEXT,
+
       },
 
-      razonSocial: {
+razonSocial: {
         type: DataTypes.TEXT,
+
       },
 
-      fechaEmision: {
+fechaEmision: {
         type: DataTypes.DATEONLY,
 
-        get: function () {
+        get: function() {
           return this.getDataValue('fechaEmision')
-            ? moment.utc(this.getDataValue('fechaEmision')).format('YYYY-MM-DD')
+            ? moment
+                .utc(this.getDataValue('fechaEmision'))
+                .format('YYYY-MM-DD')
             : null;
         },
+
       },
 
-      numeroComprobante: {
+numeroComprobante: {
         type: DataTypes.TEXT,
+
       },
 
-      mongoGravado10: {
+mongoGravado10: {
         type: DataTypes.DECIMAL,
+
       },
 
-      mongoGravado5: {
+mongoGravado5: {
         type: DataTypes.DECIMAL,
+
       },
 
-      timbrado: {
+timbrado: {
         type: DataTypes.INTEGER,
+
       },
 
-      exento: {
+exento: {
         type: DataTypes.DECIMAL,
+
       },
 
-      imputaIRE: {
+imputaIRE: {
         type: DataTypes.BOOLEAN,
 
         allowNull: false,
         defaultValue: false,
+
       },
 
-      imputaIVA: {
+imputaIVA: {
         type: DataTypes.BOOLEAN,
 
         allowNull: false,
         defaultValue: false,
+
       },
 
-      imputaIRPRSP: {
+imputaIRPRSP: {
         type: DataTypes.BOOLEAN,
 
         allowNull: false,
         defaultValue: false,
+
       },
 
       importHash: {
@@ -107,6 +123,7 @@ module.exports = function (sequelize, DataTypes) {
   );
 
   compras.associate = (db) => {
+
     db.compras.belongsTo(db.contribuyentes, {
       as: 'contribuyente',
       foreignKey: {
@@ -146,3 +163,4 @@ module.exports = function (sequelize, DataTypes) {
 
   return compras;
 };
+

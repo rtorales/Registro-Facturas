@@ -1,3 +1,4 @@
+
 const db = require('../models');
 const FileDBApi = require('./file');
 const crypto = require('crypto');
@@ -7,56 +8,109 @@ const Sequelize = db.Sequelize;
 const Op = Sequelize.Op;
 
 module.exports = class VentasDBApi {
+
   static async create(data, options) {
-    const currentUser = (options && options.currentUser) || { id: null };
-    const transaction = (options && options.transaction) || undefined;
+  const currentUser = (options && options.currentUser) || { id: null };
+  const transaction = (options && options.transaction) || undefined;
 
-    const ventas = await db.ventas.create(
-      {
-        id: data.id || undefined,
+  const ventas = await db.ventas.create(
+  {
+  id: data.id || undefined,
 
-        razonSocial: data.razonSocial || null,
-        fechaEmision: data.fechaEmision || null,
-        numeroIdentificacion: data.numeroIdentificacion || null,
-        tipoIdentificacionComprador: data.tipoIdentificacionComprador || null,
-        numeroComprobante: data.numeroComprobante || null,
-        montoGravado5: data.montoGravado5 || null,
-        montoGravado10: data.montoGravado10 || null,
-        exento: data.exento || null,
-        timbrado: data.timbrado || null,
-        imputaIVA: data.imputaIVA || false,
+    razonSocial: data.razonSocial
+    ||
+    null
+,
 
-        imputaIRE: data.imputaIRE || false,
+    fechaEmision: data.fechaEmision
+    ||
+    null
+,
 
-        imputaIRPRSP: data.imputaIRPRSP || false,
+    numeroIdentificacion: data.numeroIdentificacion
+    ||
+    null
+,
 
-        anexo: data.anexo || null,
-        importHash: data.importHash || null,
-        createdById: currentUser.id,
-        updatedById: currentUser.id,
-      },
-      { transaction },
-    );
+    tipoIdentificacionComprador: data.tipoIdentificacionComprador
+    ||
+    null
+,
+
+    numeroComprobante: data.numeroComprobante
+    ||
+    null
+,
+
+    montoGravado5: data.montoGravado5
+    ||
+    null
+,
+
+    montoGravado10: data.montoGravado10
+    ||
+    null
+,
+
+    exento: data.exento
+    ||
+    null
+,
+
+    timbrado: data.timbrado
+    ||
+    null
+,
+
+    imputaIVA: data.imputaIVA
+    ||
+    false
+
+,
+
+    imputaIRE: data.imputaIRE
+    ||
+    false
+
+,
+
+    imputaIRPRSP: data.imputaIRPRSP
+    ||
+    false
+
+,
+
+    anexo: data.anexo
+    ||
+    null
+,
+
+  importHash: data.importHash || null,
+  createdById: currentUser.id,
+  updatedById: currentUser.id,
+  },
+  { transaction },
+  );
 
     await ventas.setContribuyente(data.contribuyente || null, {
-      transaction,
+    transaction,
     });
 
     await FileDBApi.replaceRelationFiles(
-      {
-        belongsTo: db.ventas.getTableName(),
-        belongsToColumn: 'documento',
-        belongsToId: ventas.id,
-      },
-      data.documento,
-      options,
+    {
+    belongsTo: db.ventas.getTableName(),
+    belongsToColumn: 'documento',
+    belongsToId: ventas.id,
+    },
+    data.documento,
+    options,
     );
 
-    return ventas;
+  return ventas;
   }
 
   static async update(id, data, options) {
-    const currentUser = (options && options.currentUser) || { id: null };
+    const currentUser = (options && options.currentUser) || {id: null};
     const transaction = (options && options.transaction) || undefined;
 
     const ventas = await db.ventas.findByPk(id, {
@@ -65,25 +119,78 @@ module.exports = class VentasDBApi {
 
     await ventas.update(
       {
-        razonSocial: data.razonSocial || null,
-        fechaEmision: data.fechaEmision || null,
-        numeroIdentificacion: data.numeroIdentificacion || null,
-        tipoIdentificacionComprador: data.tipoIdentificacionComprador || null,
-        numeroComprobante: data.numeroComprobante || null,
-        montoGravado5: data.montoGravado5 || null,
-        montoGravado10: data.montoGravado10 || null,
-        exento: data.exento || null,
-        timbrado: data.timbrado || null,
-        imputaIVA: data.imputaIVA || false,
 
-        imputaIRE: data.imputaIRE || false,
+        razonSocial: data.razonSocial
+        ||
+        null
+,
 
-        imputaIRPRSP: data.imputaIRPRSP || false,
+        fechaEmision: data.fechaEmision
+        ||
+        null
+,
 
-        anexo: data.anexo || null,
+        numeroIdentificacion: data.numeroIdentificacion
+        ||
+        null
+,
+
+        tipoIdentificacionComprador: data.tipoIdentificacionComprador
+        ||
+        null
+,
+
+        numeroComprobante: data.numeroComprobante
+        ||
+        null
+,
+
+        montoGravado5: data.montoGravado5
+        ||
+        null
+,
+
+        montoGravado10: data.montoGravado10
+        ||
+        null
+,
+
+        exento: data.exento
+        ||
+        null
+,
+
+        timbrado: data.timbrado
+        ||
+        null
+,
+
+        imputaIVA: data.imputaIVA
+        ||
+        false
+
+,
+
+        imputaIRE: data.imputaIRE
+        ||
+        false
+
+,
+
+        imputaIRPRSP: data.imputaIRPRSP
+        ||
+        false
+
+,
+
+        anexo: data.anexo
+        ||
+        null
+,
+
         updatedById: currentUser.id,
       },
-      { transaction },
+      {transaction},
     );
 
     await ventas.setContribuyente(data.contribuyente || null, {
@@ -104,22 +211,19 @@ module.exports = class VentasDBApi {
   }
 
   static async remove(id, options) {
-    const currentUser = (options && options.currentUser) || { id: null };
+    const currentUser = (options && options.currentUser) || {id: null};
     const transaction = (options && options.transaction) || undefined;
 
     const ventas = await db.ventas.findByPk(id, options);
 
-    await ventas.update(
-      {
-        deletedBy: currentUser.id,
-      },
-      {
-        transaction,
-      },
-    );
+    await ventas.update({
+      deletedBy: currentUser.id
+    }, {
+      transaction,
+    });
 
     await ventas.destroy({
-      transaction,
+      transaction
     });
 
     return ventas;
@@ -128,20 +232,23 @@ module.exports = class VentasDBApi {
   static async findBy(where, options) {
     const transaction = (options && options.transaction) || undefined;
 
-    const ventas = await db.ventas.findOne({ where }, { transaction });
+    const ventas = await db.ventas.findOne(
+      { where },
+      { transaction },
+    );
 
     if (!ventas) {
       return ventas;
     }
 
-    const output = ventas.get({ plain: true });
+    const output = ventas.get({plain: true});
 
     output.contribuyente = await ventas.getContribuyente({
-      transaction,
+      transaction
     });
 
     output.documento = await ventas.getDocumento({
-      transaction,
+      transaction
     });
 
     return output;
@@ -159,6 +266,7 @@ module.exports = class VentasDBApi {
     const transaction = (options && options.transaction) || undefined;
     let where = {};
     let include = [
+
       {
         model: db.contribuyentes,
         as: 'contribuyente',
@@ -168,6 +276,7 @@ module.exports = class VentasDBApi {
         model: db.file,
         as: 'documento',
       },
+
     ];
 
     if (filter) {
@@ -181,7 +290,11 @@ module.exports = class VentasDBApi {
       if (filter.razonSocial) {
         where = {
           ...where,
-          [Op.and]: Utils.ilike('ventas', 'razonSocial', filter.razonSocial),
+          [Op.and]: Utils.ilike(
+            'ventas',
+            'razonSocial',
+            filter.razonSocial,
+          ),
         };
       }
 
@@ -210,7 +323,11 @@ module.exports = class VentasDBApi {
       if (filter.anexo) {
         where = {
           ...where,
-          [Op.and]: Utils.ilike('ventas', 'anexo', filter.anexo),
+          [Op.and]: Utils.ilike(
+            'ventas',
+            'anexo',
+            filter.anexo,
+          ),
         };
       }
 
@@ -342,7 +459,9 @@ module.exports = class VentasDBApi {
       ) {
         where = {
           ...where,
-          active: filter.active === true || filter.active === 'true',
+          active:
+            filter.active === true ||
+            filter.active === 'true',
         };
       }
 
@@ -375,13 +494,13 @@ module.exports = class VentasDBApi {
       }
 
       if (filter.contribuyente) {
-        var listItems = filter.contribuyente.split('|').map((item) => {
-          return Utils.uuid(item);
+        var listItems = filter.contribuyente.split('|').map(item => {
+          return  Utils.uuid(item)
         });
 
         where = {
           ...where,
-          contribuyenteId: { [Op.or]: listItems },
+          contribuyenteId: {[Op.or]: listItems}
         };
       }
 
@@ -410,39 +529,35 @@ module.exports = class VentasDBApi {
       }
     }
 
-    let { rows, count } = options?.countOnly
-      ? {
-          rows: [],
-          count: await db.ventas.count({
+    let { rows, count } = options?.countOnly ? {rows: [], count: await db.ventas.count({
             where,
             include,
             distinct: true,
             limit: limit ? Number(limit) : undefined,
             offset: offset ? Number(offset) : undefined,
-            order:
-              filter.field && filter.sort
+            order: (filter.field && filter.sort)
                 ? [[filter.field, filter.sort]]
                 : [['createdAt', 'desc']],
             transaction,
-          }),
-        }
-      : await db.ventas.findAndCountAll({
-          where,
-          include,
-          distinct: true,
-          limit: limit ? Number(limit) : undefined,
-          offset: offset ? Number(offset) : undefined,
-          order:
-            filter.field && filter.sort
-              ? [[filter.field, filter.sort]]
-              : [['createdAt', 'desc']],
-          transaction,
-        });
+        },
+    )} : await db.ventas.findAndCountAll(
+        {
+            where,
+            include,
+            distinct: true,
+            limit: limit ? Number(limit) : undefined,
+            offset: offset ? Number(offset) : undefined,
+            order: (filter.field && filter.sort)
+                ? [[filter.field, filter.sort]]
+                : [['createdAt', 'desc']],
+            transaction,
+        },
+    );
 
-    //    rows = await this._fillWithRelationsAndFilesForRows(
-    //      rows,
-    //      options,
-    //    );
+//    rows = await this._fillWithRelationsAndFilesForRows(
+//      rows,
+//      options,
+//    );
 
     return { rows, count };
   }
@@ -454,13 +569,17 @@ module.exports = class VentasDBApi {
       where = {
         [Op.or]: [
           { ['id']: Utils.uuid(query) },
-          Utils.ilike('ventas', 'id', query),
+          Utils.ilike(
+            'ventas',
+            'id',
+            query,
+          ),
         ],
       };
     }
 
     const records = await db.ventas.findAll({
-      attributes: ['id', 'id'],
+      attributes: [ 'id', 'id' ],
       where,
       limit: limit ? Number(limit) : undefined,
       orderBy: [['id', 'ASC']],
@@ -471,4 +590,6 @@ module.exports = class VentasDBApi {
       label: record.id,
     }));
   }
+
 };
+

@@ -28,183 +28,219 @@ import Widget from 'components/Widget';
 import ContribuyentesSelectItem from 'pages/CRUD/Contribuyentes/helpers/ContribuyentesSelectItem';
 
 const ComprasForm = (props) => {
+
   const {
-    isEditing,
-    isProfile,
-    findLoading,
-    saveLoading,
-    record,
-    onSubmit,
-    onCancel,
-    modal,
+  isEditing,
+  isProfile,
+  findLoading,
+  saveLoading,
+  record,
+  onSubmit,
+  onCancel,
+  modal
   } = props;
 
   const iniValues = () => {
-    return IniValues(comprasFields, record || {});
-  };
+  return IniValues(comprasFields, record || {});
+  }
 
   const formValidations = () => {
-    return FormValidations(comprasFields, record || {});
-  };
+  return FormValidations(comprasFields, record || {});
+  }
 
   const handleSubmit = (values) => {
-    const { id, ...data } = PreparedValues(comprasFields, values || {});
-    onSubmit(id, data);
+  const { id, ...data } = PreparedValues(comprasFields, values || {});
+  onSubmit(id, data);
   };
 
   const title = () => {
-    if (isProfile) {
-      return 'Edit My Profile';
-    }
+  if(isProfile) {
+  return 'Edit My Profile';
+  }
 
-    return isEditing ? 'Edit Compras' : 'Add Compras';
+  return isEditing
+  ? 'Edit Compras'
+  : 'Add Compras';
   };
 
   const renderForm = () => (
-    <Widget title={<h4>{title()}</h4>} collapse close>
-      <Formik
-        onSubmit={handleSubmit}
-        initialValues={iniValues()}
-        validationSchema={formValidations()}
+  <Widget title={<h4>{title()}</h4>} collapse close>
+  <Formik
+          onSubmit={handleSubmit}
+  initialValues={iniValues()}
+  validationSchema={formValidations()}
+  >
+  {(form) => (
+  <form onSubmit={form.handleSubmit}>
+    <Grid container spacing={3} direction="column">
+
+      <Grid item>
+        <ContribuyentesSelectItem
+        name={'contribuyente'}
+        schema={comprasFields}
+        showCreate={!modal}
+        form={form}
+        />
+      </Grid>
+
+      <Grid item>
+        <RadioFormItem
+          name={'tipoIdentificacionComprador'}
+          schema={comprasFields}
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'numeroIdentificacion'}
+          schema={comprasFields}
+
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'razonSocial'}
+          schema={comprasFields}
+
+        />
+      </Grid>
+
+      <Grid item>
+        <DatePickerFormItem
+          name={'fechaEmision'}
+          schema={comprasFields}
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'numeroComprobante'}
+          schema={comprasFields}
+
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'mongoGravado10'}
+          schema={comprasFields}
+
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'mongoGravado5'}
+          schema={comprasFields}
+
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'timbrado'}
+          schema={comprasFields}
+        />
+      </Grid>
+
+      <Grid item>
+        <InputFormItem
+          name={'exento'}
+          schema={comprasFields}
+
+        />
+      </Grid>
+
+      <Grid item>
+        <ImagesFormItem
+          name={'anexo'}
+          schema={comprasFields}
+          path={'compras/anexo'}
+          fileProps={{
+          size: undefined,
+          formats: undefined,
+          }}
+          max={undefined}
+        />
+      </Grid>
+
+      <Grid item>
+        <FilesFormItem
+          name={'documento'}
+          schema={comprasFields}
+          path={'compras/documento'}
+          fileProps={{
+          size: undefined,
+          formats: undefined,
+          }}
+          max={undefined}
+        />
+      </Grid>
+
+      <Grid item>
+        <SwitchFormItem
+          name={'imputaIRE'}
+          schema={comprasFields}
+        />
+      </Grid>
+
+      <Grid item>
+        <SwitchFormItem
+          name={'imputaIVA'}
+          schema={comprasFields}
+        />
+      </Grid>
+
+      <Grid item>
+        <SwitchFormItem
+          name={'imputaIRPRSP'}
+          schema={comprasFields}
+        />
+      </Grid>
+
+  </Grid>
+  <Grid container spacing={3} mt={2}>
+    <Grid item>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={form.handleSubmit}
       >
-        {(form) => (
-          <form onSubmit={form.handleSubmit}>
-            <Grid container spacing={3} direction='column'>
-              <Grid item>
-                <ContribuyentesSelectItem
-                  name={'contribuyente'}
-                  schema={comprasFields}
-                  showCreate={!modal}
-                  form={form}
-                />
-              </Grid>
-
-              <Grid item>
-                <RadioFormItem
-                  name={'tipoIdentificacionComprador'}
-                  schema={comprasFields}
-                />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem
-                  name={'numeroIdentificacion'}
-                  schema={comprasFields}
-                />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem name={'razonSocial'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <DatePickerFormItem
-                  name={'fechaEmision'}
-                  schema={comprasFields}
-                />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem
-                  name={'numeroComprobante'}
-                  schema={comprasFields}
-                />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem name={'mongoGravado10'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem name={'mongoGravado5'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem name={'timbrado'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <InputFormItem name={'exento'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <ImagesFormItem
-                  name={'anexo'}
-                  schema={comprasFields}
-                  path={'compras/anexo'}
-                  fileProps={{
-                    size: undefined,
-                    formats: undefined,
-                  }}
-                  max={undefined}
-                />
-              </Grid>
-
-              <Grid item>
-                <FilesFormItem
-                  name={'documento'}
-                  schema={comprasFields}
-                  path={'compras/documento'}
-                  fileProps={{
-                    size: undefined,
-                    formats: undefined,
-                  }}
-                  max={undefined}
-                />
-              </Grid>
-
-              <Grid item>
-                <SwitchFormItem name={'imputaIRE'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <SwitchFormItem name={'imputaIVA'} schema={comprasFields} />
-              </Grid>
-
-              <Grid item>
-                <SwitchFormItem name={'imputaIRPRSP'} schema={comprasFields} />
-              </Grid>
-            </Grid>
-            <Grid container spacing={3} mt={2}>
-              <Grid item>
-                <Button
-                  color='primary'
-                  variant='contained'
-                  onClick={form.handleSubmit}
-                >
-                  Save
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  color='primary'
-                  variant='outlined'
-                  onClick={form.handleReset}
-                >
-                  Reset
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  color='primary'
-                  variant='outlined'
-                  onClick={() => onCancel()}
-                >
-                  Cancel
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        )}
-      </Formik>
-    </Widget>
+        Save
+      </Button>
+    </Grid>
+    <Grid item>
+      <Button
+        color="primary"
+        variant="outlined"
+        onClick={form.handleReset}
+      >
+        Reset
+      </Button>
+    </Grid>
+    <Grid item>
+      <Button
+        color="primary"
+        variant="outlined"
+        onClick={() => onCancel()}
+      >
+        Cancel
+      </Button>
+    </Grid>
+  </Grid>
+      </form>
+      )
+      }
+    </Formik>
+  </Widget>
   );
   if (findLoading) {
-    return <Loader />;
+  return <Loader />;
   }
   if (isEditing && !record) {
-    return <Loader />;
+  return <Loader />;
   }
   return renderForm();
-};
-export default ComprasForm;
+  }
+  export default ComprasForm;
