@@ -17,14 +17,14 @@ const actions = {
         type: 'VENTAS_FORM_FIND_STARTED',
       });
 
-      axios.get(`/ventas/${id}`).then((res) => {
+      axios.get(`/ventas/${id}`).then(res => {
         const record = res.data;
 
         dispatch({
           type: 'VENTAS_FORM_FIND_SUCCESS',
           payload: record,
         });
-      });
+      })
     } catch (error) {
       Errors.handle(error);
 
@@ -42,13 +42,13 @@ const actions = {
         type: 'VENTAS_FORM_CREATE_STARTED',
       });
 
-      axios.post('/ventas', { data: values }).then((res) => {
+      axios.post('/ventas', { data: values }).then(res => {
         dispatch({
           type: 'VENTAS_FORM_CREATE_SUCCESS',
         });
         showSnackbar({ type: 'success', message: 'Ventas created' });
         dispatch(push('/admin/ventas'));
-      });
+      })
     } catch (error) {
       Errors.handle(error);
 
@@ -58,13 +58,16 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, isProfile) => async (dispatch, getState) => {
+  doUpdate: (id, values, isProfile) => async (
+    dispatch,
+    getState,
+  ) => {
     try {
       dispatch({
         type: 'VENTAS_FORM_UPDATE_STARTED',
       });
 
-      await axios.put(`/ventas/${id}`, { id, data: values });
+      await axios.put(`/ventas/${id}`, {id, data: values});
 
       dispatch(doInit());
 

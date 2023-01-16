@@ -17,14 +17,14 @@ const actions = {
         type: 'CONTRIBUYENTES_FORM_FIND_STARTED',
       });
 
-      axios.get(`/contribuyentes/${id}`).then((res) => {
+      axios.get(`/contribuyentes/${id}`).then(res => {
         const record = res.data;
 
         dispatch({
           type: 'CONTRIBUYENTES_FORM_FIND_SUCCESS',
           payload: record,
         });
-      });
+      })
     } catch (error) {
       Errors.handle(error);
 
@@ -42,13 +42,13 @@ const actions = {
         type: 'CONTRIBUYENTES_FORM_CREATE_STARTED',
       });
 
-      axios.post('/contribuyentes', { data: values }).then((res) => {
+      axios.post('/contribuyentes', { data: values }).then(res => {
         dispatch({
           type: 'CONTRIBUYENTES_FORM_CREATE_SUCCESS',
         });
         showSnackbar({ type: 'success', message: 'Contribuyentes created' });
         dispatch(push('/admin/contribuyentes'));
-      });
+      })
     } catch (error) {
       Errors.handle(error);
 
@@ -58,13 +58,16 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, isProfile) => async (dispatch, getState) => {
+  doUpdate: (id, values, isProfile) => async (
+    dispatch,
+    getState,
+  ) => {
     try {
       dispatch({
         type: 'CONTRIBUYENTES_FORM_UPDATE_STARTED',
       });
 
-      await axios.put(`/contribuyentes/${id}`, { id, data: values });
+      await axios.put(`/contribuyentes/${id}`, {id, data: values});
 
       dispatch(doInit());
 

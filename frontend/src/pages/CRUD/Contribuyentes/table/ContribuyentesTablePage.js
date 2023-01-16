@@ -7,6 +7,6 @@ const ContribuyentesTablePage = () => {
       <ContribuyentesTable />
     </div>
   );
-};
+}
 
 export default ContribuyentesTablePage;

@@ -15,6 +15,7 @@
     "express": "4.17.1",
     "formidable": "1.2.2",
     "helmet": "4.1.1",
+    "json2csv": "^5.0.7",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.20",
     "moment": "2.29.1",
@@ -30,7 +31,8 @@
     "sequelize": "6.3.5",
     "sqlite": "4.0.15",
     "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "tedious": "^15.1.2"
   },
   "engines": {
     "node": ">=8"

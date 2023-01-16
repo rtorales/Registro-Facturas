@@ -30,7 +30,7 @@ const ContribuyentesSelectItem = (props) => {
         return undefined;
       }
 
-      let label = originalValue.label ? originalValue.label : originalValue.id;
+      let label = originalValue.label ? originalValue.label : originalValue.razonSocial;
 
       return {
         id: originalValue.id,
@@ -50,7 +50,10 @@ const ContribuyentesSelectItem = (props) => {
     },
   };
 
-  const { form, ...rest } = props;
+  const {
+    form,
+    ...rest
+  } = props;
 
   return (
     <React.Fragment>
@@ -63,10 +66,12 @@ const ContribuyentesSelectItem = (props) => {
       />
     </React.Fragment>
   );
-};
+}
 
 const select = (state) => ({
-  hasPermissionToCreate: state.contribuyentes.hasPermissionToCreate,
+  hasPermissionToCreate: state.contribuyentes.hasPermissionToCreate
 });
 
-export default connect(select)(ContribuyentesSelectItem);
+export default connect(select)(
+  ContribuyentesSelectItem,
+);

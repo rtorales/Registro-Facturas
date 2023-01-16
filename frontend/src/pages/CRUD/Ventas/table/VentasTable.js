@@ -6,14 +6,15 @@ import * as contribuyentesDataFormat from 'pages/CRUD/Contribuyentes/table/Contr
 
 import actions from 'actions/ventas/ventasListActions';
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import {Link} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import { useHistory } from 'react-router';
-import { uniqueId } from 'lodash';
+import {uniqueId} from 'lodash';
 import { withStyles } from '@mui/styles';
-import { makeStyles } from '@mui/styles';
-import { DataGrid } from '@mui/x-data-grid';
-import { Link as LinkMaterial } from '../../../../components/Wrappers';
+import {makeStyles} from "@mui/styles";
+import { DataGrid } from "@mui/x-data-grid";
+import { Link as LinkMaterial} from '../../../../components/Wrappers';
+import axios from 'axios';
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -22,18 +23,18 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import CloseIcon from '@mui/icons-material/Close';
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import CloseIcon from "@mui/icons-material/Close";
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import Widget from 'components/Widget';
 import Actions from '../../../../components/Table/Actions';
-import Dialog from '../../../../components/Dialog';
+import Dialog from "../../../../components/Dialog";
 
 const useStyles = makeStyles({
   container: {
@@ -51,7 +52,7 @@ const useStyles = makeStyles({
   },
   element: {
     marginRight: '1rem',
-  },
+  }
 });
 
 const VentasTable = () => {
@@ -62,23 +63,10 @@ const VentasTable = () => {
   const [width, setWidth] = React.useState(window.innerWidth);
 
   const [filters, setFilters] = React.useState([
-    { label: 'Numero Identificacion', title: 'numeroIdentificacion' },
-    { label: 'Razon Social', title: 'razonSocial' },
-    { label: 'Timbrado', title: 'timbrado' },
-    { label: 'Numero Comprobante', title: 'numeroComprobante' },
-
-    {
-      label: 'Mongo Gravado 10 (IVA incluido)',
-      title: 'mongoGravado10',
-      number: 'true',
-    },
-    {
-      label: 'Mongo Gravado 5 (IVA incluido)',
-      title: 'mongoGravado5',
-      number: 'true',
-    },
-    { label: 'Exento', title: 'exento', number: 'true' },
-    { label: 'Contribuyente', title: 'contribuyente' },
+    {label: 'Razon Social', title: 'razonSocial'},{label: 'Numero Comprobante', title: 'numeroComprobante'},
+          {label: 'Timbrado', title: 'timbrado', number: 'true'},
+          {label: 'Mongo Gravado 5 (IVA incluido)', title: 'montoGravado5', number: 'true'},{label: 'Monto Gravado 10 (IVA incluido)', title: 'montoGravado10', number: 'true'},{label: 'Exento', title: 'exento', number: 'true'},
+          {label: 'Contribuyente', title: 'contribuyente'},
   ]);
 
   const [filterItems, setFilterItems] = React.useState([]);
@@ -102,7 +90,7 @@ const VentasTable = () => {
     setLoading(true);
     await dispatch(actions.doFetch({ limit, page, orderBy, request }));
     setLoading(false);
-  };
+  }
 
   React.useEffect(() => {
     loadData(rowsState.pageSize, rowsState.page, sortModel[0], filterUrl);
@@ -112,121 +100,95 @@ const VentasTable = () => {
     updateWindowDimensions();
     window.addEventListener('resize', updateWindowDimensions);
     return () => window.removeEventListener('resize', updateWindowDimensions);
-  }, []);
+  }, [])
 
   const handleSortModelChange = (newModel) => {
     setSortModel(newModel);
   };
 
   const updateWindowDimensions = () => {
-    setWidth(window.innerWidth);
-  };
+    setWidth(window.innerWidth)
+  }
 
   const handleChange = (id) => (e) => {
     const value = e.target.value;
     const name = e.target.name;
 
-    setFilterItems(
-      filterItems.map((item) =>
-        item.id === id
-          ? { id, fields: { ...item.fields, [name]: value } }
-          : item,
-      ),
-    );
+    setFilterItems(filterItems.map(item =>
+      item.id === id ? { id, fields: { ...item.fields, [name]: value }} : item
+    ));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let request = '&';
-    filterItems.forEach((item) => {
-      filters[
-        filters.map((filter) => filter.title).indexOf(item.fields.selectedField)
-      ].hasOwnProperty('number')
-        ? (request += `${item.fields.selectedField}Range=${item.fields.filterValueFrom}&${item.fields.selectedField}Range=${item.fields.filterValueTo}&`)
-        : (request += `${item.fields.selectedField}=${item.fields.filterValue}&`);
-    });
+    filterItems.forEach(item => {
+      filters[filters.map(filter => filter.title).indexOf(item.fields.selectedField)].hasOwnProperty('number')
+      ? request += `${item.fields.selectedField}Range=${item.fields.filterValueFrom}&${item.fields.selectedField}Range=${item.fields.filterValueTo}&`
+      : request += `${item.fields.selectedField}=${item.fields.filterValue}&`
+      })
 
     loadData(rowsState.pageSize, 0, sortModel[0], request);
     setFilterUrl(request);
   };
 
   const handleReset = () => {
-    setFilterItems([]);
+    setFilterItems([])
     setFilterUrl('');
-    dispatch(
-      actions.doFetch({ limit: rowsState.pageSize, page: 0, request: '' }),
-    );
-  };
+    dispatch(actions.doFetch({limit: rowsState.pageSize, page: 0, request: '' }));
+  }
 
-  const downloadCSV = () => {
-    const items = [...rows];
-
-    const replacer = (key, value) => (value === null ? '' : value);
-    const header = Object.keys(items[0]);
-    const csv = [
-      header.join(','), // header row first
-      ...items.map((row) =>
-        header
-          .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-          .join(','),
-      ),
-    ].join('\r\n');
-
-    const file = new File([csv], 'ventas-report.csv', {
-      type: 'text/plain',
-    });
-
-    if (linkCsvDownload.current) {
-      linkCsvDownload.current.href = URL.createObjectURL(file);
-      linkCsvDownload.current.download = file.name;
-
-      linkCsvDownload.current.click();
-    }
+  const getVentasCSV = async () => {
+    const response = await axios({url: '/ventas?filetype=csv', method: 'GET',responseType: 'blob'});
+    const type = response.headers['content-type']
+    const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' })
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    link.download = 'ventasCSV.csv'
+    link.click()
   };
 
   const addFilter = () => {
     let newItem = {
-      id: uniqueId(),
-      fields: {
-        filterValue: '',
-        filterValueFrom: '',
-        filterValueTo: '',
-      },
-    };
+        id: uniqueId(),
+        fields: {
+          filterValue: "",
+          filterValueFrom: "",
+          filterValueTo: "",
+        }
+    }
     newItem.fields.selectedField = filters[0].title;
-    setFilterItems([...filterItems, newItem]);
-  };
+    setFilterItems([...filterItems, newItem])
+  }
 
   const deleteFilter = (value) => (e) => {
     e.preventDefault();
     const newItems = filterItems.filter((item) => item.id !== value);
     if (newItems.length) {
-      setFilterItems(newItems);
+        setFilterItems(newItems);
     } else {
-      dispatch(actions.doFetch({ limit: 10, page: 1 }));
-      setFilterItems(newItems);
+        dispatch(actions.doFetch({limit: 10, page: 1}));
+        setFilterItems(newItems);
     }
-  };
+  }
 
   const handleDelete = () => {
-    dispatch(
-      actions.doDelete({ limit: 10, page: 0, request: filterUrl }, idToDelete),
-    );
-  };
+    dispatch(actions.doDelete({ limit: 10, page: 0, request: filterUrl }, idToDelete));
+  }
 
   const openModal = (event, cell) => {
     const id = cell;
     event.stopPropagation();
     dispatch(actions.doOpenConfirm(id));
-  };
+  }
 
   const closeModal = () => {
     dispatch(actions.doCloseConfirm());
-  };
+  }
 
   function NoRowsOverlay() {
     return (
-      <Stack height='100%' alignItems='center' justifyContent='center'>
+      <Stack height="100%" alignItems="center" justifyContent="center">
         No results found
       </Stack>
     );
@@ -234,180 +196,115 @@ const VentasTable = () => {
 
   function humanize(str) {
     return str
-      .replace(/^[\s_]+|[\s_]+$/g, '')
-      .replace(/[_\s]+/g, ' ')
-      .replace(/^[a-z]/, function (m) {
-        return m.toUpperCase();
-      });
+        .replace(/^[\s_]+|[\s_]+$/g, '')
+        .replace(/[_\s]+/g, ' ')
+        .replace(/^[a-z]/, function(m) { return m.toUpperCase(); });
   }
 
   const columns = [
-    {
-      field: 'contribuyente',
 
-      sortable: false,
-      renderCell: (params) =>
-        contribuyentesDataFormat.listFormatter(
-          params.row[params.field],
-          history,
-          'contribuyentes',
-        ),
-      flex: 1,
+      { field: "contribuyente",
 
-      headerName: 'Contribuyente',
-    },
+        sortable: false,
+        renderCell: (params) => contribuyentesDataFormat.listFormatter(params.row[params.field], history, 'contribuyentes'),
+        flex: 1,
 
-    {
-      field: 'tipoIdentificacionComprador',
+      headerName: "Contribuyente"
+      },
 
-      headerName: 'Tipo Identificación Comprador',
-    },
+      { field: "razonSocial",
 
-    {
-      field: 'numeroIdentificacion',
+        flex: 0.6,
 
-      flex: 0.6,
+      headerName: "Razon Social"
+      },
 
-      headerName: 'Numero Identificacion',
-    },
+      { field: "fechaEmision",
 
-    {
-      field: 'razonSocial',
+      headerName: "Fecha Emision"
+      },
 
-      flex: 0.6,
+      { field: "numeroComprobante",
 
-      headerName: 'Razon Social',
-    },
+        flex: 0.6,
 
-    {
-      field: 'fechaEmision',
+      headerName: "Numero Comprobante"
+      },
 
-      headerName: 'Fecha Emision',
-    },
+      { field: "montoGravado5",
 
-    {
-      field: 'timbrado',
+        flex: 0.6,
 
-      flex: 0.6,
+      headerName: "Mongo Gravado 5 (IVA incluido)"
+      },
 
-      headerName: 'Timbrado',
-    },
+      { field: "montoGravado10",
 
-    {
-      field: 'numeroComprobante',
+        flex: 0.6,
 
-      flex: 0.6,
+      headerName: "Monto Gravado 10 (IVA incluido)"
+      },
 
-      headerName: 'Numero Comprobante',
-    },
+      { field: "exento",
 
-    {
-      field: 'mongoGravado10',
+        flex: 0.6,
 
-      flex: 0.6,
+      headerName: "Exento"
+      },
 
-      headerName: 'Mongo Gravado 10 (IVA incluido)',
-    },
+      { field: "timbrado",
 
-    {
-      field: 'mongoGravado5',
+        flex: 0.6,
 
-      flex: 0.6,
+      headerName: "Timbrado"
+      },
 
-      headerName: 'Mongo Gravado 5 (IVA incluido)',
-    },
-
-    {
-      field: 'exento',
-
-      flex: 0.6,
-
-      headerName: 'Exento',
-    },
-
-    {
-      field: 'imputaIVA',
-
-      renderCell: (params) => dataFormat.booleanFormatter(params.row),
-
-      headerName: 'Imputa IVA',
-    },
-
-    {
-      field: 'imputaIRE',
-
-      renderCell: (params) => dataFormat.booleanFormatter(params.row),
-
-      headerName: 'Imputa IRE',
-    },
-
-    {
-      field: 'imputaIRPRSP',
-
-      renderCell: (params) => dataFormat.booleanFormatter(params.row),
-
-      headerName: 'Imputa IRP-RSP',
-    },
-
-    {
-      field: 'id',
-      headerName: 'Actions',
-      sortable: false,
-      flex: 0.6,
-      maxWidth: 80,
-      renderCell: (params) => (
-        <Actions
-          classes={classes}
-          entity='ventas'
-          openModal={openModal}
-          {...params}
-        />
-      ),
-    },
+      {
+        field: 'id',
+        headerName: 'Actions',
+        sortable: false,
+        flex: 0.6,
+        maxWidth: 80,
+        renderCell: (params) => <Actions classes={classes} entity="ventas" openModal={openModal} {...params} />,
+      }
   ];
 
   return (
     <div>
       <Widget title={<h4>{humanize('Ventas')}</h4>} disableWidgetMenu>
         <Box className={classes.actions}>
-          <Link to='/admin/ventas/new' className={classes.element}>
+          <Link to="/admin/ventas/new" className={classes.element}>
             <Button variant='contained'>New</Button>
           </Link>
           <Button
             type='button'
-            variant='contained'
+            variant="contained"
             className={classes.element}
             onClick={addFilter}
           >
             Add Filter
           </Button>
-          <Button
-            type='button'
-            variant='contained'
-            onClick={downloadCSV}
-            className={classes.element}
-          >
+          <Button type='button' variant='contained' onClick={getVentasCSV} className={classes.element}>
             Export CSV
           </Button>
-          <a ref={linkCsvDownload} href='' style={{ display: 'none' }}></a>
         </Box>
 
         <Box sx={{ flexGrow: 1 }}>
           {filterItems.map((item) => (
             <Grid
               container
-              alignItems='center'
+              alignItems="center"
               columns={12}
               spacing={1}
               className={classes.container}
             >
               <Grid item xs={3}>
-                <FormControl size='small' fullWidth>
+                <FormControl size="small" fullWidth>
                   <InputLabel>Field</InputLabel>
                   <Select
-                    label='Field'
+                    label="Field"
                     name='selectedField'
-                    size='small'
+                    size="small"
                     value={item.fields.selectedField}
                     onChange={handleChange(item.id)}
                   >
@@ -422,26 +319,24 @@ const VentasTable = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              {filters
-                .find((filter) => filter.title === item.fields.selectedField)
-                .hasOwnProperty('number') ? (
+              {filters.find(filter => filter.title === item.fields.selectedField).hasOwnProperty('number') ? (
                 <>
                   <Grid item xs={2}>
                     <TextField
-                      label='From'
+                      label="From"
                       type='text'
                       name='filterValueFrom'
-                      size='small'
+                      size="small"
                       fullWidth
                       onChange={handleChange(item.id)}
                     />
                   </Grid>
                   <Grid item xs={2}>
                     <TextField
-                      label='To'
+                      label="To"
                       type='text'
                       name='filterValueTo'
-                      size='small'
+                      size="small"
                       fullWidth
                       onChange={handleChange(item.id)}
                     />
@@ -450,10 +345,10 @@ const VentasTable = () => {
               ) : (
                 <Grid item xs={4}>
                   <TextField
-                    label='Contained'
+                    label="Contained"
                     type='text'
                     name='filterValue'
-                    size='small'
+                    size="small"
                     fullWidth
                     onChange={handleChange(item.id)}
                   />
@@ -462,8 +357,8 @@ const VentasTable = () => {
 
               <Grid item xs={2}>
                 <Button
-                  variant='outlined'
-                  color='error'
+                  variant="outlined"
+                  color="error"
                   onClick={deleteFilter(item.id)}
                 >
                   <CloseIcon />
@@ -474,12 +369,19 @@ const VentasTable = () => {
           {filterItems.length > 0 && (
             <Grid container spacing={1}>
               <Grid item>
-                <Button variant='outlined' onClick={(e) => handleSubmit(e)}>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handleSubmit(e)}
+                >
                   Apply
                 </Button>
               </Grid>
               <Grid item>
-                <Button color='error' variant='outlined' onClick={handleReset}>
+                <Button
+                  color="error"
+                  variant="outlined"
+                  onClick={handleReset}
+                >
                   Clear
                 </Button>
               </Grid>
@@ -487,44 +389,39 @@ const VentasTable = () => {
           )}
         </Box>
 
-        <div
-          style={{
-            minHeight: 500,
-            width: '100%',
-            paddingTop: 20,
-            paddingBottom: 20,
-          }}
-        >
+        <div style={{minHeight: 500, width: "100%", paddingTop: 20, paddingBottom: 20}}>
           <DataGrid
             rows={loading ? [] : rows}
             columns={columns}
-            sortingMode='server'
+            sortingMode="server"
             sortModel={sortModel}
             onSortModelChange={handleSortModelChange}
             rowsPerPageOptions={[5, 10, 20, 50, 100]}
             pageSize={5}
+
             pagination
             {...rowsState}
             rowCount={count}
-            paginationMode='server'
-            components={{ NoRowsOverlay, LoadingOverlay: LinearProgress }}
+            paginationMode="server"
+            components={{ NoRowsOverlay, LoadingOverlay: LinearProgress, }}
             onPageChange={(page) => {
-              setRowsState((prev) => ({ ...prev, page }));
+              setRowsState((prev) => ({ ...prev, page }))
             }}
             onPageSizeChange={(pageSize) => {
-              setRowsState((prev) => ({ ...prev, pageSize }));
-            }}
+              setRowsState((prev) => ({ ...prev, pageSize }))
+              }
+            }
+
             onSelectionModelChange={(newSelectionModel) => {
               setSelectionModel(newSelectionModel);
             }}
             selectionModel={selectionModel}
+
             checkboxSelection
             disableSelectionOnClick
             disableColumnMenu
             loading={loading}
-            onRowClick={(e) => {
-              history.push(`/admin/ventas/${e.id}/edit`);
-            }}
+            onRowClick={(e) => {history.push(`/admin/ventas/${e.id}/edit`)}}
             autoHeight
           />
         </div>
@@ -546,13 +443,13 @@ const VentasTable = () => {
 
       <Dialog
         open={modalOpen}
-        title='Confirm delete'
-        contentText='Are you sure you want to delete this item?'
+        title="Confirm delete"
+        contentText="Are you sure you want to delete this item?"
         onClose={closeModal}
         onSubmit={handleDelete}
       />
     </div>
-  );
-};
+  )
+}
 
 export default VentasTable;
