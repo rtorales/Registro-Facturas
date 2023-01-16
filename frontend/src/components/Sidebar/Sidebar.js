@@ -117,8 +117,8 @@ function Sidebar({ location, structure }) {
           />
 
           <SidebarLink
-            label="Contribuyentes"
-            link="/admin/contribuyentes"
+            label="Contribuyente"
+            link="/admin/contribuyente"
             location={location}
             isSidebarOpened={isSidebarOpenedWrapper}
             icon={<CoreIcon />}
@@ -126,8 +126,8 @@ function Sidebar({ location, structure }) {
           />
 
           <SidebarLink
-            label="Compras"
-            link="/admin/compras"
+            label="Compra"
+            link="/admin/compra"
             location={location}
             isSidebarOpened={isSidebarOpenedWrapper}
             icon={<CoreIcon />}
@@ -135,8 +135,8 @@ function Sidebar({ location, structure }) {
           />
 
           <SidebarLink
-            label="Ventas"
-            link="/admin/ventas"
+            label="Venta"
+            link="/admin/venta"
             location={location}
             isSidebarOpened={isSidebarOpenedWrapper}
             icon={<CoreIcon />}

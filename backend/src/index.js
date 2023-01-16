@@ -16,11 +16,11 @@ const fileRoutes = require('./routes/file');
 
 const usersRoutes = require('./routes/users');
 
-const contribuyentesRoutes = require('./routes/contribuyentes');
+const contribuyenteRoutes = require('./routes/contribuyente');
 
-const comprasRoutes = require('./routes/compras');
+const compraRoutes = require('./routes/compra');
 
-const ventasRoutes = require('./routes/ventas');
+const ventaRoutes = require('./routes/venta');
 
 const options = {
   definition: {
@@ -73,11 +73,11 @@ app.use('/api/file', fileRoutes);
 
 app.use('/api/users', passport.authenticate('jwt', {session: false}), usersRoutes);
 
-app.use('/api/contribuyentes', passport.authenticate('jwt', {session: false}), contribuyentesRoutes);
+app.use('/api/contribuyente', passport.authenticate('jwt', {session: false}), contribuyenteRoutes);
 
-app.use('/api/compras', passport.authenticate('jwt', {session: false}), comprasRoutes);
+app.use('/api/compra', passport.authenticate('jwt', {session: false}), compraRoutes);
 
-app.use('/api/ventas', passport.authenticate('jwt', {session: false}), ventasRoutes);
+app.use('/api/venta', passport.authenticate('jwt', {session: false}), ventaRoutes);
 
 const publicDir = path.join(
   __dirname,

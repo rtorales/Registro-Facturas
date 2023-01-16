@@ -18,20 +18,20 @@ const Dashboard = () => {
   const managementValue = useManagementState();
 
   const [users, setUsers] = useState(0);
-  const [contribuyentes, setContribuyentes] = useState(0);
-  const [compras, setCompras] = useState(0);
-  const [ventas, setVentas] = useState(0);
+  const [contribuyente, setContribuyente] = useState(0);
+  const [compra, setCompra] = useState(0);
+  const [venta, setVenta] = useState(0);
 
   const [currentUser, setCurrentUser] = useState(null);
 
   async function loadData() {
-    const fns = [setUsers,setContribuyentes,setCompras,setVentas,];
+    const fns = [setUsers,setContribuyente,setCompra,setVenta,];
 
     const responseUsers = await axios.get(`/users/count`);
-    const responseContribuyentes = await axios.get(`/contribuyentes/count`);
-    const responseCompras = await axios.get(`/compras/count`);
-    const responseVentas = await axios.get(`/ventas/count`);
-      Promise.all([responseUsers,responseContribuyentes,responseCompras,responseVentas,])
+    const responseContribuyente = await axios.get(`/contribuyente/count`);
+    const responseCompra = await axios.get(`/compra/count`);
+    const responseVenta = await axios.get(`/venta/count`);
+      Promise.all([responseUsers,responseContribuyente,responseCompra,responseVenta,])
           .then((res) => res.map((el) => el.data))
           .then((data) => data.forEach((el, i) => fns[i](el.count)));
   }
@@ -81,8 +81,8 @@ const Dashboard = () => {
         </Grid>
 
     <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Link to={'/admin/contribuyentes'} style={{ textDecoration: 'none' }}>
-          <Widget title={'Contribuyentes'}>
+        <Link to={'/admin/contribuyente'} style={{ textDecoration: 'none' }}>
+          <Widget title={'Contribuyente'}>
             <div
               style={{
                 display: 'flex',
@@ -90,15 +90,15 @@ const Dashboard = () => {
               }}
             >
               <InfoIcon color='primary' sx={{ mr: 1 }} />
-              <p className={classes.widgetText}>Contribuyentes: <span className={classes.widgetTextCount}>{contribuyentes}</span></p>
+              <p className={classes.widgetText}>Contribuyente: <span className={classes.widgetTextCount}>{contribuyente}</span></p>
             </div>
           </Widget>
         </Link>
         </Grid>
 
     <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Link to={'/admin/compras'} style={{ textDecoration: 'none' }}>
-          <Widget title={'Compras'}>
+        <Link to={'/admin/compra'} style={{ textDecoration: 'none' }}>
+          <Widget title={'Compra'}>
             <div
               style={{
                 display: 'flex',
@@ -106,15 +106,15 @@ const Dashboard = () => {
               }}
             >
               <InfoIcon color='primary' sx={{ mr: 1 }} />
-              <p className={classes.widgetText}>Compras: <span className={classes.widgetTextCount}>{compras}</span></p>
+              <p className={classes.widgetText}>Compra: <span className={classes.widgetTextCount}>{compra}</span></p>
             </div>
           </Widget>
         </Link>
         </Grid>
 
     <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Link to={'/admin/ventas'} style={{ textDecoration: 'none' }}>
-          <Widget title={'Ventas'}>
+        <Link to={'/admin/venta'} style={{ textDecoration: 'none' }}>
+          <Widget title={'Venta'}>
             <div
               style={{
                 display: 'flex',
@@ -122,7 +122,7 @@ const Dashboard = () => {
               }}
             >
               <InfoIcon color='primary' sx={{ mr: 1 }} />
-              <p className={classes.widgetText}>Ventas: <span className={classes.widgetTextCount}>{ventas}</span></p>
+              <p className={classes.widgetText}>Venta: <span className={classes.widgetTextCount}>{venta}</span></p>
             </div>
           </Widget>
         </Link>

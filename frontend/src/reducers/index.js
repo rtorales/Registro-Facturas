@@ -5,11 +5,11 @@ import { connectRouter } from 'connected-react-router';
 
 import users from 'reducers/users/usersReducers';
 
-import contribuyentes from 'reducers/contribuyentes/contribuyentesReducers';
+import contribuyente from 'reducers/contribuyente/contribuyenteReducers';
 
-import compras from 'reducers/compras/comprasReducers';
+import compra from 'reducers/compra/compraReducers';
 
-import ventas from 'reducers/ventas/ventasReducers';
+import venta from 'reducers/venta/ventaReducers';
 
 export default (history) =>
   combineReducers({
@@ -18,11 +18,11 @@ export default (history) =>
 
     users,
 
-    contribuyentes,
+    contribuyente,
 
-    compras,
+    compra,
 
-    ventas,
+    venta,
 
   });
 
