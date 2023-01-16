@@ -34,15 +34,6 @@ import { useLayoutState } from '../../context/LayoutContext'
 import UsersFormPage from 'pages/CRUD/Users/form/UsersFormPage';
 import UsersTablePage from 'pages/CRUD/Users/table/UsersTablePage';
 
-import ContribuyentesFormPage from 'pages/CRUD/Contribuyentes/form/ContribuyentesFormPage';
-import ContribuyentesTablePage from 'pages/CRUD/Contribuyentes/table/ContribuyentesTablePage';
-
-import ComprasFormPage from 'pages/CRUD/Compras/form/ComprasFormPage';
-import ComprasTablePage from 'pages/CRUD/Compras/table/ComprasTablePage';
-
-import VentasFormPage from 'pages/CRUD/Ventas/form/VentasFormPage';
-import VentasTablePage from 'pages/CRUD/Ventas/table/VentasTablePage';
-
 const Redirect = (props) => {
   useEffect(() => window.location.replace(props.url))
   return <span>Redirecting...</span>;
@@ -87,18 +78,6 @@ function Layout(props) {
                     <Route path={"/admin/users"} exact component={UsersTablePage} />
                     <Route path={"/admin/users/new"} exact component={UsersFormPage} />
                     <Route path={"/admin/users/:id/edit"} exact component={UsersFormPage} />
-
-                    <Route path={"/admin/contribuyentes"} exact component={ContribuyentesTablePage} />
-                    <Route path={"/admin/contribuyentes/new"} exact component={ContribuyentesFormPage} />
-                    <Route path={"/admin/contribuyentes/:id/edit"} exact component={ContribuyentesFormPage} />
-
-                    <Route path={"/admin/compras"} exact component={ComprasTablePage} />
-                    <Route path={"/admin/compras/new"} exact component={ComprasFormPage} />
-                    <Route path={"/admin/compras/:id/edit"} exact component={ComprasFormPage} />
-
-                    <Route path={"/admin/ventas"} exact component={VentasTablePage} />
-                    <Route path={"/admin/ventas/new"} exact component={VentasFormPage} />
-                    <Route path={"/admin/ventas/:id/edit"} exact component={VentasFormPage} />
 
                 </Switch>
                 <Fab

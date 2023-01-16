@@ -117,33 +117,6 @@ function Sidebar({ location, structure }) {
           />
 
           <SidebarLink
-            label="Contribuyentes"
-            link="/admin/contribuyentes"
-            location={location}
-            isSidebarOpened={isSidebarOpenedWrapper}
-            icon={<CoreIcon />}
-            toggleDrawer={toggleDrawer(true)}
-          />
-
-          <SidebarLink
-            label="Compras"
-            link="/admin/compras"
-            location={location}
-            isSidebarOpened={isSidebarOpenedWrapper}
-            icon={<CoreIcon />}
-            toggleDrawer={toggleDrawer(true)}
-          />
-
-          <SidebarLink
-            label="Ventas"
-            link="/admin/ventas"
-            location={location}
-            isSidebarOpened={isSidebarOpenedWrapper}
-            icon={<CoreIcon />}
-            toggleDrawer={toggleDrawer(true)}
-          />
-
-          <SidebarLink
             label="Documentation"
             link="/documentation"
             location={location}

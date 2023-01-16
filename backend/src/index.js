@@ -16,12 +16,6 @@ const fileRoutes = require('./routes/file');
 
 const usersRoutes = require('./routes/users');
 
-const contribuyentesRoutes = require('./routes/contribuyentes');
-
-const comprasRoutes = require('./routes/compras');
-
-const ventasRoutes = require('./routes/ventas');
-
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -72,12 +66,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/file', fileRoutes);
 
 app.use('/api/users', passport.authenticate('jwt', {session: false}), usersRoutes);
-
-app.use('/api/contribuyentes', passport.authenticate('jwt', {session: false}), contribuyentesRoutes);
-
-app.use('/api/compras', passport.authenticate('jwt', {session: false}), comprasRoutes);
-
-app.use('/api/ventas', passport.authenticate('jwt', {session: false}), ventasRoutes);
 
 const publicDir = path.join(
   __dirname,
